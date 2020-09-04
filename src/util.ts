@@ -23,3 +23,15 @@ export function useStorage(name: string, storage?: Storage) {
     ),
   ]
 }
+
+export function first<A extends NodeJS.Dict<string | string[]>>(
+  dict: A
+): { [key: keyof A]: string } {
+  const obj: { [key: string]: string } = {}
+  for (const key in dict) {
+    if (!dict[key]) obj[key] = ""
+    else if (Array.isArray(dict[key])) obj[key] = obj[key][0]
+    else if (typeof obj[key] === "string") obj[key]
+  }
+  return obj
+}

@@ -13,8 +13,6 @@ export const Routes: React.FC = () => (
     />
     <RouteSuspense path="/:owner/:name/gantt" component={import("./Gantt")} />
     <RouteSuspense path="/:owner/:name" component={import("./Repository")} />
-    <RouteSuspense path="/:login" component={import("./User")} />
-    <RouteSuspense path="/" component={import("./Home")} exact={false} />
   </Switch>
 )
 

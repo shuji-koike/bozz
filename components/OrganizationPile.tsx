@@ -8,8 +8,7 @@ import {
 import { GithubItem, GithubItemFragment } from "./GithubItem"
 import { fragments, Pile } from "./Pile"
 
-export default function OrganizationPilePage() {
-  const params = useParams<{ login: string }>()
+export default function OrganizationPilePage(params: { login: string }) {
   const search = new URLSearchParams(useLocation().search)
   const variables = {
     ...params,
