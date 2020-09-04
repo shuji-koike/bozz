@@ -24,14 +24,19 @@ export function useStorage(name: string, storage?: Storage) {
   ]
 }
 
-export function first<A extends NodeJS.Dict<string | string[]>>(
-  dict: A
-): { [key: keyof A]: string } {
-  const obj: { [key: string]: string } = {}
-  for (const key in dict) {
-    if (!dict[key]) obj[key] = ""
-    else if (Array.isArray(dict[key])) obj[key] = obj[key][0]
-    else if (typeof obj[key] === "string") obj[key]
+export class Params {
+  static string(value: string | string[] | undefined): string {
+    if (Array.isArray(value)) return value[0]
+    if (typeof value === "string") return value
+    return ""
   }
-  return obj
+  static number(value: string | string[] | undefined): number | undefined {
+    return Number(Params.string(value)) || undefined
+  }
+  static flatten<T>(query: Record<string, string | string[] | undefined>) {
+    return Object.entries(query).reduce(
+      (acc, [k, v]) => ({ ...acc, [k]: Params.string(v) }),
+      {}
+    )
+  }
 }

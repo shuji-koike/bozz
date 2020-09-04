@@ -1,6 +1,5 @@
 import { gql, useQuery } from "@apollo/client"
 import React from "react"
-import { useLocation, useParams } from "react-router-dom"
 import {
   QueryOrganizationPile,
   QueryOrganizationPileVariables,
@@ -8,44 +7,9 @@ import {
 import { GithubItem, GithubItemFragment } from "./GithubItem"
 import { fragments, Pile } from "./Pile"
 
-export default function OrganizationPilePage(params: { login: string }) {
-  const search = new URLSearchParams(useLocation().search)
-  const variables = {
-    ...params,
-    limit: Number(search.get("limit")) || undefined,
-  }
-  const query = gql`
-    query QueryOrganizationPile(
-      $login: String!
-      $limit: Int = 20
-      $after: String
-    ) {
-      organization(login: $login) {
-        ...GithubItemFragmentOrganization
-        repositories(
-          first: 10
-          orderBy: { field: PUSHED_AT, direction: DESC }
-        ) {
-          nodes {
-            ...GithubItemFragmentRepository
-          }
-        }
-        membersWithRole(first: $limit, after: $after) {
-          totalCount
-          pageInfo {
-            hasNextPage
-            endCursor
-          }
-          nodes {
-            ...UserPileFragment
-          }
-        }
-      }
-    }
-    ${fragments}
-    ${GithubItemFragment.Organization}
-    ${GithubItemFragment.Repository}
-  `
+export default function OrganizationPilePage(
+  variables: QueryOrganizationPileVariables
+) {
   const { data, loading, error } = useQuery<
     QueryOrganizationPile,
     QueryOrganizationPileVariables
@@ -75,3 +39,33 @@ export default function OrganizationPilePage(params: { login: string }) {
     </section>
   )
 }
+
+const query = gql`
+  query QueryOrganizationPile(
+    $login: String!
+    $limit: Int = 20
+    $after: String
+  ) {
+    organization(login: $login) {
+      ...GithubItemFragmentOrganization
+      repositories(first: 10, orderBy: { field: PUSHED_AT, direction: DESC }) {
+        nodes {
+          ...GithubItemFragmentRepository
+        }
+      }
+      membersWithRole(first: $limit, after: $after) {
+        totalCount
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+        nodes {
+          ...UserPileFragment
+        }
+      }
+    }
+  }
+  ${fragments}
+  ${GithubItemFragment.Organization}
+  ${GithubItemFragment.Repository}
+`

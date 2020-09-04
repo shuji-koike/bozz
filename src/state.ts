@@ -4,25 +4,6 @@ import fs from "fs-extra-promise"
 
 const state: State = {}
 
-export interface State {
-  repos?: Repo[]
-}
-
-export interface Repo {
-  owner: string
-  name: string
-  path: string
-  packages: Package[]
-}
-
-export interface Package {
-  path: string
-  package: {
-    name: string
-  }
-  scripts: Record<string, string>
-}
-
 export function getState() {
   return state
 }

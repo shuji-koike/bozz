@@ -5,7 +5,7 @@ import { Auth } from "./Auth"
 export const Header: React.FC = ({ children }) => {
   return (
     <StyledHeader>
-      <h1>test</h1>
+      <h1>bozz</h1>
       <Auth />
       {children}
     </StyledHeader>

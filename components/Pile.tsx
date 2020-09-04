@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client"
+import { useRouter } from "next/router"
 import React from "react"
-import { useParams } from "react-router-dom"
+import { Params } from "~/src/util"
 import { GithubItemFragmentRepository } from "../types/GithubItemFragmentRepository"
 import {
   UserPileFragment,
@@ -11,11 +12,10 @@ import { GithubItem, GithubItemFragment } from "./GithubItem"
 import { PagerMore, PagerUtil } from "./Pager"
 
 export const Pile: React.FC<{ data: UserPileFragment }> = ({ data }) => {
-  const { owner, name, login } = useParams<{
-    owner?: string
-    name?: string
-    login?: string
-  }>()
+  const { query } = useRouter()
+  const login = Params.string(query.login)
+  const owner = Params.string(query.owner)
+  const name = Params.string(query.name)
   function getRepoLabel(repo?: GithubItemFragmentRepository) {
     if (!repo) return ""
     return [

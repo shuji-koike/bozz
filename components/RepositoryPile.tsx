@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client"
 import React from "react"
-import { useLocation, useParams } from "react-router-dom"
+import { nodes } from "~/src/util"
 import {
   QueryRepositoryPile,
   QueryRepositoryPileVariables,
@@ -9,39 +9,9 @@ import { GithubItem, GithubItemFragment } from "./GithubItem"
 import { PagerMore } from "./Pager"
 import { fragments, Pile } from "./Pile"
 
-export default function RepositoryPile() {
-  const params = useParams<{ owner: string; name: string }>()
-  const search = new URLSearchParams(useLocation().search)
-  const variables = {
-    ...params,
-    limit: Number(search.get("limit")) || undefined,
-  }
-  const query = gql`
-    query QueryRepositoryPile(
-      $owner: String!
-      $name: String!
-      $limit: Int = 20
-      $after: String
-    ) {
-      repository(owner: $owner, name: $name) {
-        ...GithubItemFragmentRepository
-        owner {
-          login
-        }
-        collaborators(first: $limit, after: $after) {
-          totalCount
-          pageInfo {
-            hasNextPage
-          }
-          nodes {
-            ...UserPileFragment
-          }
-        }
-      }
-    }
-    ${GithubItemFragment.Repository}
-    ${fragments}
-  `
+export default function RepositoryPile({
+  ...variables
+}: QueryRepositoryPileVariables) {
   const { data, loading, error } = useQuery<
     QueryRepositoryPile,
     QueryRepositoryPileVariables
@@ -51,15 +21,42 @@ export default function RepositoryPile() {
   if (!data) return <p>data is null</p>
   return (
     <section>
-      {data.repository?.collaborators?.nodes?.map(e => (
-        <React.Fragment key={e?.id}>
+      {nodes(data.repository?.collaborators).map(e => (
+        <React.Fragment key={e.id}>
           <p>
             <GithubItem frag={e} />
           </p>
-          <Pile data={e!}></Pile>
+          <Pile data={e}></Pile>
         </React.Fragment>
       ))}
       <PagerMore frag={data.repository?.collaborators} />
     </section>
   )
 }
+
+const query = gql`
+  query QueryRepositoryPile(
+    $owner: String!
+    $name: String!
+    $limit: Int = 20
+    $after: String
+  ) {
+    repository(owner: $owner, name: $name) {
+      ...GithubItemFragmentRepository
+      owner {
+        login
+      }
+      collaborators(first: $limit, after: $after) {
+        totalCount
+        pageInfo {
+          hasNextPage
+        }
+        nodes {
+          ...UserPileFragment
+        }
+      }
+    }
+  }
+  ${GithubItemFragment.Repository}
+  ${fragments}
+`
