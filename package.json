@@ -4,7 +4,8 @@
   "private": true,
   "main": "index.ts",
   "scripts": {
-    "start": "react-app-rewired start",
+    "start": "ts-node-dev --respawn .",
+    "dev": "react-app-rewired start",
     "build": "react-app-rewired build",
     "lint:prettier": "prettier --write '**/*.{js,jsx,ts,tsx,json}'",
     "lint:eslint": "eslint",
@@ -61,5 +62,6 @@
     "development": [
       "last 1 chrome version"
     ]
-  }
+  },
+  "proxy": "http://localhost:1080"
 }
