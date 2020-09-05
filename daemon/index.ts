@@ -2,6 +2,7 @@ import express from "express"
 import config from "../config"
 import { initState, getState } from "./state"
 import { createProxyServer } from "http-proxy"
+import execa from "execa"
 
 let booted = false
 
@@ -10,6 +11,7 @@ var proxy = createProxyServer({
   xfwd: true,
   changeOrigin: true,
   autoRewrite: true,
+  timeout: 10e3,
 })
 proxy.on("error", e => console.error(e))
 
@@ -23,6 +25,7 @@ export async function boot() {
     await Promise.all([
       initState(config.rootDir),
       listen(config.host, config.port),
+      run("yarn", ["dev"], "/Users/shuji/github.com/shuji-koike/bozz"),
     ])
     console.info("booted: ready")
   } catch (error) {
@@ -45,4 +48,13 @@ async function listen(host: string, port: number) {
   })
   app.listen(port, host)
   console.info(`http://${host}:${port}/`)
+}
+
+function run(command: string, args: string[] = [], path?: string) {
+  const proc = execa(command, args, {
+    cwd: path,
+  })
+  proc.stdout && proc.stdout.pipe(process.stdout)
+  proc.stderr && proc.stderr.pipe(process.stderr)
+  return proc
 }

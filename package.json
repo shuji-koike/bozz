@@ -4,8 +4,8 @@
   "private": true,
   "main": "daemon/index.ts",
   "scripts": {
-    "daemon": "yarn workspace daemon run start",
-    "start": "react-app-rewired start",
+    "dev": "react-app-rewired start",
+    "start": "yarn workspace daemon run start",
     "build": "react-app-rewired build",
     "lint:prettier": "prettier --write '**/*.{js,jsx,ts,tsx,json}'",
     "lint:eslint": "eslint",
