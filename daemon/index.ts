@@ -6,18 +6,23 @@ import execa from "execa"
 
 let booted = false
 
-var proxy = createProxyServer({
+const procList: execa.ExecaChildProcess[] = []
+
+const proxy = createProxyServer({
   ws: true,
   xfwd: true,
   changeOrigin: true,
   autoRewrite: true,
-  timeout: 10e3,
+  timeout: 3e3,
 })
 proxy.on("error", e => console.error(e))
 
-boot()
+process.on("SIGTERM", () => {
+  console.log(procList.map(e => e.pid))
+  for (const proc of procList) proc.kill("SIGTERM")
+})
 
-export async function boot() {
+setTimeout(async function boot() {
   console.info("daemon: boot")
   if (booted) return
   booted = true
@@ -25,14 +30,14 @@ export async function boot() {
     await Promise.all([
       initState(config.rootDir),
       listen(config.host, config.port),
-      run("yarn", ["dev"], "/Users/shuji/github.com/shuji-koike/bozz"),
+      run("yarn", ["dev"], ".."),
     ])
     console.info("booted: ready")
   } catch (error) {
     console.error(error)
     return []
   }
-}
+})
 
 async function listen(host: string, port: number) {
   const app = express()
@@ -44,17 +49,20 @@ async function listen(host: string, port: number) {
   app.use((req, res) => {
     const target = "http://127.0.0.1:3000/"
     console.debug("proxy:", target, req.url)
-    proxy.web(req, res, { target })
+    proxy.web(req, res, { target }, e => {
+      console.warn(e.message)
+      res.redirect("/.bozz")
+    })
   })
   app.listen(port, host)
-  console.info(`http://${host}:${port}/`)
+  console.info("listen:", `http://${host}:${port}/`)
 }
 
 function run(command: string, args: string[] = [], path?: string) {
   const proc = execa(command, args, {
     cwd: path,
   })
-  proc.stdout && proc.stdout.pipe(process.stdout)
-  proc.stderr && proc.stderr.pipe(process.stderr)
-  return proc
+  // proc.stdout && proc.stdout.pipe(process.stdout)
+  // proc.stderr && proc.stderr.pipe(process.stderr)
+  procList.push(proc)
 }
