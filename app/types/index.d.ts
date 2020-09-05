@@ -16,7 +16,16 @@ interface Repo {
 
 interface GitBranch {
   refname: string
+  objecttype: "blob" | "tree" | "commit" | "tag"
   objectname: string
+  objectsize: number
+  upstream: string | null
+  authordate: Date
+  subject: string
+  body: string
+  author: string
+  committer: string
+  isHead: boolean
 }
 
 interface Package {

@@ -57,11 +57,17 @@ export const BozzBranches: React.FC<Pick<Repo, "branches">> = ({
 
 export const BozzBranch: React.FC<GitBranch> = ({ refname }) => {
   return (
-    <BranchName>
+    <StyledBranchName>
       {refname.replace(/^refs\/(heads|remotes|tags)\//, "")}
-    </BranchName>
+    </StyledBranchName>
   )
 }
+
+const StyledBranchName = styled(BranchName)`
+  & + & {
+    margin-left: 1em;
+  }
+`
 
 export const BozzPackages: React.FC<Pick<Repo, "packages">> = ({
   packages,

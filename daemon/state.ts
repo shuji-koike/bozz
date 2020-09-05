@@ -61,22 +61,47 @@ export function git<A>(path: string, args: string[]) {
 
 export async function branches(path: string): Promise<GitBranch[]> {
   // https://git-scm.com/docs/git-for-each-ref
-  const format = JSON.stringify({
+  const format = {
     refname: "%(refname)",
     objecttype: "%(objecttype)",
     objectname: "%(objectname)",
     objectsize: "%(objectsize)",
     upstream: "%(upstream)",
-    symref: "%(symref)",
-    worktreepath: "%(worktreepath)",
+    authordate: "%(authordate)",
+    subject: "%(contents:subject)",
+    body: "%(contents:body)",
+    author: "%(author)",
+    committer: "%(committer)",
     HEAD: "%(HEAD)",
-  })
-  const stdout = await git(path, ["for-each-ref", "--format", format])
+  }
+  async function toBranch({
+    objecttype,
+    objectsize,
+    upstream,
+    authordate,
+    HEAD,
+    ...obj
+  }: Record<keyof typeof format, string>): Promise<GitBranch> {
+    return {
+      ...obj,
+      objecttype: objecttype as GitBranch["objecttype"],
+      objectsize: Number(objectsize),
+      upstream: upstream || null,
+      authordate: new Date(),
+      isHead: HEAD == "*",
+    }
+  }
+  const stdout = await git(path, [
+    "for-each-ref",
+    "--format",
+    JSON.stringify(format),
+  ])
   return Promise.all(
     stdout
       .split("\n")
-      .map(e => tryParse<GitBranch>(e))
+      .map<typeof format | null>(tryParse)
       .filter(nonNull)
+      .map(toBranch)
   )
 }
 
