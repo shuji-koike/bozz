@@ -4,9 +4,9 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "yarn start",
+      "name": "yarn daemon",
       "runtimeExecutable": "yarn",
-      "runtimeArgs": ["start"]
+      "runtimeArgs": ["daemon"]
     }
   ]
 }

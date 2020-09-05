@@ -22,9 +22,13 @@ export async function boot() {
 async function listen(host: string, port: number) {
   const app = express()
   app.set("json spaces", 2)
-  app.use((req, res) => {
+  app.use("/.bozz", (req, res) => {
     console.info(req.url)
     res.send(getState())
+  })
+  app.use((req, res) => {
+    console.info(req.url)
+    res.send("ok")
   })
   app.listen(port, host)
   console.info(`http://${host}:${port}/`)

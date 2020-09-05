@@ -3,8 +3,12 @@
   "compilerOptions": {
     "strict": true,
     "target": "esnext",
-    "lib": ["esnext", "dom", "dom.iterable"],
-    "module": "commonjs",
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable"
+    ],
+    "module": "esnext",
     "moduleResolution": "node",
     "allowJs": true,
     "skipLibCheck": true,
@@ -15,12 +19,23 @@
     "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
     "jsx": "preserve",
-    "typeRoots": ["./app/types"]
+    "typeRoots": [
+      "./app/types"
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "config-overrides.js"],
-  "exclude": ["node_modules"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "config-overrides.js"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
   "ts-node": {
     "files": true
   },
-  "files": ["app/types/index.d.ts"]
+  "files": [
+    "app/types/index.d.ts"
+  ]
 }
