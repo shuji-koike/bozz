@@ -18,7 +18,10 @@ const proxy = createProxyServer({
 proxy.on("error", e => console.error(e))
 
 process.on("SIGTERM", () => {
-  console.log(procList.map(e => e.pid))
+  console.log(
+    "procList: ",
+    procList.map(e => e.pid)
+  )
   for (const proc of procList) proc.kill("SIGTERM")
 })
 
@@ -42,25 +45,30 @@ setTimeout(async function boot() {
 async function listen(host: string, port: number) {
   const app = express()
   app.set("json spaces", 2)
-  app.use("/.bozz", (req, res) => {
+  app.get("/.bozz", (req, res) => {
     console.info(req.url)
     res.send(getState())
   })
   app.use((req, res) => {
-    const target = "http://127.0.0.1:3000/"
+    const target = resolveProxyTarget(req.url)
     console.debug("proxy:", target, req.url)
-    proxy.web(req, res, { target }, e => {
-      console.warn(e.message)
+    proxy.web(req, res, { target }, error => {
+      console.warn(error.message)
       res.redirect("/.bozz")
     })
   })
   app.listen(port, host)
-  console.info("listen:", `http://${host}:${port}/`)
+  console.info("listen:2", `http://${host}:${port}/`)
 }
 
-function run(command: string, args: string[] = [], path?: string) {
+function resolveProxyTarget(url: string) {
+  return "http://127.0.0.1:3000/"
+}
+
+function run(command: string, args: string[] = [], cwd?: string) {
   const proc = execa(command, args, {
-    cwd: path,
+    cwd,
+    detached: true,
   })
   // proc.stdout && proc.stdout.pipe(process.stdout)
   // proc.stderr && proc.stderr.pipe(process.stderr)
