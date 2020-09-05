@@ -20,21 +20,19 @@ export const Bozz: React.FC = () => {
 }
 
 export const BozzRepo: React.FC<Repo> = ({ packages, branches, ...repo }) => (
-  <StyledListItem>
-    <StyledDetails
-      open={open}
-      label={
-        <Breadcrumb>
-          <Breadcrumb.Item>{repo.owner}</Breadcrumb.Item>
-          <Breadcrumb.Item>{repo.name}</Breadcrumb.Item>
-        </Breadcrumb>
-      }>
-      <ul>
-        <BozzBranches branches={branches} />
-        <BozzPackages packages={packages} />
-      </ul>
-    </StyledDetails>
-  </StyledListItem>
+  <StyledDetails
+    open={open}
+    label={
+      <Breadcrumb>
+        <Breadcrumb.Item>{repo.owner}</Breadcrumb.Item>
+        <Breadcrumb.Item>{repo.name}</Breadcrumb.Item>
+      </Breadcrumb>
+    }>
+    <ul>
+      <BozzBranches branches={branches} />
+      <BozzPackages packages={packages} />
+    </ul>
+  </StyledDetails>
 )
 
 export const BozzBranches: React.FC<Pick<Repo, "branches">> = ({
@@ -54,46 +52,48 @@ export const BozzBranch: React.FC<GitBranch> = ({ name }) => (
 export const BozzPackages: React.FC<Pick<Repo, "packages">> = ({
   packages,
 }) => (
-  <StyledDetails open={open} label="packages" visible={!!packages.length}>
+  <>
     {packages.map(frag => (
-      <li key={frag.path}>
+      <StyledListItem key={frag.path} label={frag.package.name}>
         <BozzPackage {...frag} />
-      </li>
+      </StyledListItem>
     ))}
-  </StyledDetails>
+  </>
 )
 
 export const BozzPackage: React.FC<Package> = ({
   scripts,
   package: { name },
 }) => (
-  <StyledListItem label={name}>
-    <StyledDetails
-      open={open}
-      label={
-        <ButtonGroup>
-          {Object.entries(scripts || {})
-            .slice(0, 10)
-            .map(([key, value]) => (
-              <Button key={key} title={value}>
-                {key}
-              </Button>
-            ))}
-        </ButtonGroup>
-      }
-      visible={!!scripts}></StyledDetails>
-  </StyledListItem>
+  <StyledDetails
+    open={open}
+    visible={!!scripts}
+    label={
+      <ButtonGroup>
+        {Object.entries(scripts || {})
+          .slice(0, 10)
+          .map(([key, value]) => (
+            <Button key={key} title={value}>
+              {key}
+            </Button>
+          ))}
+      </ButtonGroup>
+    }></StyledDetails>
 )
 
-const ListItem: React.FC<{ label?: React.ReactNode }> = ({
+const ListItem: React.FC<{ label?: React.ReactNode; visible?: boolean }> = ({
   label,
+  visible = true,
   children,
-}) => (
-  <>
-    {label && <span>{label}</span>}
-    {children}
-  </>
-)
+}) =>
+  visible ? (
+    <div>
+      {label && <span>{label}</span>}
+      {children}
+    </div>
+  ) : (
+    <></>
+  )
 
 export const StyledListItem = styled(ListItem)``
 
