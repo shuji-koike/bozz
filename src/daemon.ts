@@ -2,7 +2,11 @@ import express from "express"
 import config from "../config"
 import { initState, getState } from "./state"
 
+let booted = false
+
 export async function boot() {
+  if (booted) return
+  booted = true
   console.info("boot")
   try {
     return Promise.all([

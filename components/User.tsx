@@ -100,19 +100,6 @@ export const UserFragment = gql`
   ${RepositoriesFragment}
 `
 
-const query = gql`
-  query QueryUser(
-    $login: String!
-    $first: Int = 30
-    $orderBy: RepositoryOrder = { field: UPDATED_AT, direction: DESC }
-  ) {
-    user(login: $login) {
-      ...GithubUserFragment
-    }
-  }
-  ${UserFragment}
-`
-
 const StyledSection = styled.section`
   ul {
     list-style-type: none;

@@ -6,7 +6,7 @@
       "request": "launch",
       "name": "yarn start",
       "runtimeExecutable": "yarn",
-      "runtimeArgs": ["dev"]
+      "runtimeArgs": ["start"]
     }
   ]
 }

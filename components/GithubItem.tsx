@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client"
-import Link from "next/link"
+import { Link } from "react-router-dom"
 import React, { createElement } from "react"
 import { GithubFragment } from "../types"
 import { GithubIcon } from "./GithubIcon"
@@ -25,7 +25,7 @@ export const GithubItemLink: React.FC<{
   title?: string
 }> = ({ frag, link, title, children }) => {
   return link
-    ? createElement(Link, { href: link! }, children ?? title)
+    ? createElement(Link, { to: link! }, children ?? title)
     : createElement("a", { href: frag.url, title }, children ?? title)
 }
 

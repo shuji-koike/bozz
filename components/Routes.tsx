@@ -3,16 +3,17 @@ import { Switch, Route, RouteProps } from "react-router-dom"
 
 export const Routes: React.FC = () => (
   <Switch>
-    <RouteSuspense
+    {/* <RouteSuspense
       path="/org/:login/pile"
       component={import("./RepositoryPile")}
     />
     <RouteSuspense
       path="/:owner/:name/pile"
       component={import("./OrganizationPile")}
-    />
+    /> */}
     <RouteSuspense path="/:owner/:name/gantt" component={import("./Gantt")} />
     <RouteSuspense path="/:owner/:name" component={import("./Repository")} />
+    <RouteSuspense path="/" component={import("./Home")} />
   </Switch>
 )
 
