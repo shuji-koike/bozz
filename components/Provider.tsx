@@ -3,18 +3,22 @@ import { Auth } from "./Auth"
 import { GithubProvider } from "./GithubProvider"
 import { RateLimit } from "./RateLimit"
 import { useAuth } from "~/hooks"
+import { Provider } from "react-redux"
+import { store } from "~/store"
 
-export default function Provider({ children }: React.Props<{}>) {
+export default function ({ children }: React.Props<{}>) {
   return (
-    <GithubProvider fallback={<Auth />}>
-      <RateLimit>
-        <ContextProvider>
-          <BozzProvider>
-            <>{children}</>
-          </BozzProvider>
-        </ContextProvider>
-      </RateLimit>
-    </GithubProvider>
+    <Provider store={store}>
+      <GithubProvider fallback={<Auth />}>
+        <RateLimit>
+          <ContextProvider>
+            <BozzProvider>
+              <>{children}</>
+            </BozzProvider>
+          </ContextProvider>
+        </RateLimit>
+      </GithubProvider>
+    </Provider>
   )
 }
 

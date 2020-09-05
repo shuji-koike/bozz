@@ -1,6 +1,7 @@
 /// <reference types="firebase/app" />
 
 interface State {
+  count?: number
   repos?: Repo[]
 }
 
