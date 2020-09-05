@@ -2,9 +2,9 @@
   "name": "bozz",
   "version": "0.1.0",
   "private": true,
-  "main": "index.ts",
+  "main": "daemon/index.ts",
   "scripts": {
-    "daemon": "ts-node-dev --respawn .",
+    "daemon": "ts-node-dev --respawn daemon",
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "lint:prettier": "prettier --write '**/*.{js,jsx,ts,tsx,json}'",

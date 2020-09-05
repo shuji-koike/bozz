@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs"
+  },
+  "ts-node": {
+    "files": true
+  },
+  "files": ["app/types/index.d.ts"]
+}
