@@ -4,6 +4,10 @@ export function nonNull<T>(value: T | null): value is T {
   return value !== null
 }
 
+export function isDefined<T>(value: T | undefined): value is T {
+  return value !== undefined
+}
+
 export function nodes<T extends Object>(
   frag: { nodes: ReadonlyArray<T | null> | null } | null | undefined
 ): T[] {

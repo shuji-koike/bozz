@@ -38,7 +38,13 @@ export const BozzRepo: React.FC<Repo> = ({ packages, branches, ...repo }) => (
 export const BozzBranches: React.FC<Pick<Repo, "branches">> = ({
   branches,
 }) => (
-  <StyledDetails open={open} label="branches" visible={!!branches.length}>
+  <StyledDetails
+    label={branches
+      .filter(() => true)
+      .map(e => (
+        <BozzBranch key={e.name} {...e}></BozzBranch>
+      ))}
+    visible={!!branches.length}>
     {branches.map(e => (
       <BozzBranch key={e.name} {...e}></BozzBranch>
     ))}
@@ -53,20 +59,20 @@ export const BozzPackages: React.FC<Pick<Repo, "packages">> = ({
   packages,
 }) => (
   <>
-    {packages.map(frag => (
-      <StyledListItem key={frag.path} label={frag.package.name}>
-        <BozzPackage {...frag} />
-      </StyledListItem>
-    ))}
+    {packages.map(
+      pkg =>
+        pkg.scripts &&
+        Object.keys(pkg.scripts).length && (
+          <StyledListItem key={pkg.path} label={pkg.package.name}>
+            <BozzPackage {...pkg} />
+          </StyledListItem>
+        )
+    )}
   </>
 )
 
-export const BozzPackage: React.FC<Package> = ({
-  scripts,
-  package: { name },
-}) => (
+export const BozzPackage: React.FC<Package> = ({ scripts }) => (
   <StyledDetails
-    open={open}
     visible={!!scripts}
     label={
       <ButtonGroup>
@@ -78,7 +84,9 @@ export const BozzPackage: React.FC<Package> = ({
             </Button>
           ))}
       </ButtonGroup>
-    }></StyledDetails>
+    }>
+    <pre>{JSON.stringify(scripts, null, 2)}</pre>
+  </StyledDetails>
 )
 
 const ListItem: React.FC<{ label?: React.ReactNode; visible?: boolean }> = ({
