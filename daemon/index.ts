@@ -6,8 +6,6 @@ import execa from "execa"
 
 let booted = false
 
-const procList: execa.ExecaChildProcess[] = []
-
 const proxy = createProxyServer({
   ws: true,
   xfwd: true,
@@ -17,37 +15,27 @@ const proxy = createProxyServer({
 })
 proxy.on("error", e => console.error(e))
 
-process.on("SIGTERM", () => {
-  console.log(
-    "procList: ",
-    procList.map(e => e.pid)
-  )
-  for (const proc of procList) proc.kill("SIGTERM")
-})
-
 setTimeout(async function boot() {
   console.info("daemon: boot")
   if (booted) return
   booted = true
   try {
-    await Promise.all([
-      initState(config.rootDir),
-      listen(config.host, config.port),
-      run("yarn", ["dev"], ".."),
-    ])
-    console.info("booted: ready")
+    await initState(config.rootDir)
+    listen(config.host, config.port)
+    console.info("daemon: ready")
   } catch (error) {
     console.error(error)
     return []
   }
 })
 
-async function listen(host: string, port: number) {
+function listen(host: string, port: number) {
   const app = express()
   app.set("json spaces", 2)
   app.get("/.bozz", (req, res) => {
     console.info(req.url)
     res.send(getState())
+    run("yarn", ["dev"])
   })
   app.use((req, res) => {
     const target = resolveProxyTarget(req.url)
@@ -57,8 +45,9 @@ async function listen(host: string, port: number) {
       res.redirect("/.bozz")
     })
   })
-  app.listen(port, host)
-  console.info("listen:2", `http://${host}:${port}/`)
+  const server = app.listen(port, host)
+  process.on("SIGTERM", () => server.close())
+  console.info("listen:", `http://${host}:${port}/`)
 }
 
 function resolveProxyTarget(url: string) {
@@ -72,5 +61,5 @@ function run(command: string, args: string[] = [], cwd?: string) {
   })
   // proc.stdout && proc.stdout.pipe(process.stdout)
   // proc.stderr && proc.stderr.pipe(process.stderr)
-  procList.push(proc)
+  process.on("SIGTERM", () => proc.kill("SIGTERM"))
 }

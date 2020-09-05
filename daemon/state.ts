@@ -1,10 +1,12 @@
-import path, { resolve } from "path"
+import { resolve } from "path"
 import execa from "execa"
 import fs from "fs-extra-promise"
+import config from "../config"
 
-const state: State = {}
+const state: State = { timestamp: 0 }
 
 export function getState() {
+  initState(config.rootDir)
   return state
 }
 
@@ -14,11 +16,8 @@ export function setState(newState: Partial<State>) {
 
 export async function initState(rootDir: string) {
   setState({
-    repos: await exec(
-      path.resolve("../scripts/git-list-repo.sh"),
-      [rootDir],
-      repo
-    ),
+    timestamp: new Date().getTime(),
+    repos: await exec(resolve("../scripts/git-list-repo.sh"), [rootDir], repo),
   })
 }
 
@@ -34,9 +33,11 @@ export async function repo(path: string): Promise<Repo> {
 }
 
 export async function packages(path: string): Promise<Package[]> {
-  const { stdout } = await execa.command(
-    `git -C ${path}/.git ls-files package.json **/package.json`
-  )
+  const stdout = await git(path, [
+    "ls-files",
+    "package.json",
+    "**/package.json",
+  ])
   return Promise.all(
     stdout
       .split("\n")
@@ -45,10 +46,24 @@ export async function packages(path: string): Promise<Package[]> {
   )
 }
 
+export function git<A>(path: string, args: string[]) {
+  return execa("git", ["-C", `${path}/.git`, ...args])
+    .then(({ stdout, stderr }) => {
+      if (stderr) console.warn(stderr)
+      return stdout
+    })
+    .catch(reason => {
+      console.warn(reason)
+      return ""
+    })
+}
+
 export async function branches(path: string): Promise<GitBranch[]> {
-  const { stdout } = await execa.command(
-    `git -C ${path}/.git for-each-ref --format=%(refname:short) refs/heads`
-  )
+  const stdout = await git(path, [
+    "for-each-ref",
+    "--format=%(refname:short)",
+    "refs/heads",
+  ])
   return Promise.all(stdout.split("\n").map(e => ({ name: e })))
 }
 
