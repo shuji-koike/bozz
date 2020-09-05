@@ -1,18 +1,15 @@
 import { gql, useQuery } from "@apollo/client"
-import React, { useEffect } from "react"
+import React from "react"
 import { QueryViewer } from "../types/QueryViewer"
 import { QuerySuspense } from "./QuerySuspense"
 import { UserFragment, User } from "./User"
+import { useBozz } from "~/hooks"
 
 export default function Home() {
+  const bozz = useBozz()
+  console.log(bozz)
+
   const { data, loading, error } = useQuery<QueryViewer>(queryViewer)
-  useEffect(() => {
-    fetch("/api/state")
-      .then<State>(e => e.json())
-      .then(res => {
-        console.debug(res)
-      })
-  }, [])
   return (
     <QuerySuspense loading={loading} error={error}>
       <User frag={data?.viewer} />
