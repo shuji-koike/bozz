@@ -24,20 +24,32 @@ export async function initState(rootDir: string) {
 
 export async function repo(path: string): Promise<Repo> {
   const [owner, name] = path.split("/").slice(-2)
-  const { stdout } = await execa.command(
-    `git -C ${path}/.git ls-files package.json **/package.json`
-  )
   return {
     owner,
     name,
     path,
-    packages: await Promise.all(
-      stdout
-        .split("\n")
-        .map(e => resolve(path, e))
-        .map(npm)
-    ),
+    packages: await packages(path),
+    branches: await branches(path),
   }
+}
+
+export async function packages(path: string): Promise<Package[]> {
+  const { stdout } = await execa.command(
+    `git -C ${path}/.git ls-files package.json **/package.json`
+  )
+  return Promise.all(
+    stdout
+      .split("\n")
+      .map(e => resolve(path, e))
+      .map(npm)
+  )
+}
+
+export async function branches(path: string): Promise<GitBranch[]> {
+  const { stdout } = await execa.command(
+    `git -C ${path}/.git for-each-ref --format=%(refname:short) refs/heads`
+  )
+  return Promise.all(stdout.split("\n").map(e => ({ name: e })))
 }
 
 export async function npm(path: string): Promise<Package> {

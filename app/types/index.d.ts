@@ -8,21 +8,26 @@ interface Repo {
   owner: string
   name: string
   path: string
+  branches: GitBranch[]
   packages: Package[]
+}
+
+interface GitBranch {
+  name: string
 }
 
 interface Package {
   path: string
   package: {
-    name: string
+    name?: string
   }
-  scripts: Record<string, string>
+  scripts?: Record<string, string>
 }
 
 type AuthUser = firebase.User | null | undefined
 type AuthError = firebase.auth.Error | undefined
 
-type LoginData = {
+interface LoginData {
   email: string
   password: string
 }
