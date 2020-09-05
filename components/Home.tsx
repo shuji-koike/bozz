@@ -3,16 +3,14 @@ import React from "react"
 import { QueryViewer } from "../types/QueryViewer"
 import { QuerySuspense } from "./QuerySuspense"
 import { UserFragment, User } from "./User"
-import { useBozz } from "~/hooks"
+import { Bozz } from "./Bozz"
 
 export default function Home() {
-  const bozz = useBozz()
-  console.log(bozz)
-
   const { data, loading, error } = useQuery<QueryViewer>(queryViewer)
   return (
     <QuerySuspense loading={loading} error={error}>
       <User frag={data?.viewer} />
+      <Bozz />
     </QuerySuspense>
   )
 }
