@@ -2,6 +2,7 @@ import { resolve } from "path"
 import execa from "execa"
 import fs from "fs-extra-promise"
 import config from "../config"
+import { nonNull, parse } from "../src/util"
 
 const state: State = { timestamp: 0 }
 
@@ -61,10 +62,15 @@ export function git<A>(path: string, args: string[]) {
 export async function branches(path: string): Promise<GitBranch[]> {
   const stdout = await git(path, [
     "for-each-ref",
-    "--format=%(refname:short)",
+    '--format={"refname":"%(refname)","objectname":"%(objectname)"}',
     "refs/heads",
   ])
-  return Promise.all(stdout.split("\n").map(e => ({ name: e })))
+  return Promise.all(
+    stdout
+      .split("\n")
+      .map(e => parse<GitBranch>(e))
+      .filter(nonNull)
+  )
 }
 
 export async function npm(path: string): Promise<Package> {

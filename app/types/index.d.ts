@@ -15,7 +15,8 @@ interface Repo {
 }
 
 interface GitBranch {
-  name: string
+  refname: string
+  objectname: string
 }
 
 interface Package {

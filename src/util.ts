@@ -8,6 +8,15 @@ export function isDefined<T>(value: T | undefined): value is T {
   return value !== undefined
 }
 
+export function parse<A>(json: string): A | null {
+  try {
+    return JSON.parse(json)
+  } catch (error) {
+    console.warn(error)
+  }
+  return null
+}
+
 export function nodes<T extends Object>(
   frag: { nodes: ReadonlyArray<T | null> | null } | null | undefined
 ): T[] {
