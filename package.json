@@ -4,7 +4,7 @@
   "private": true,
   "main": "daemon/index.ts",
   "scripts": {
-    "daemon": "ts-node-dev --respawn daemon",
+    "daemon": "yarn workspace daemon run start",
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "lint:prettier": "prettier --write '**/*.{js,jsx,ts,tsx,json}'",
@@ -12,6 +12,9 @@
     "apollo:codegen": "apollo client:codegen --target typescript --tsFileExtension d.ts --useReadOnlyTypes --includes=**/*.tsx --outputFlat ./types --watch",
     "deploy": "firebase deploy"
   },
+  "workspaces": [
+    "daemon"
+  ],
   "dependencies": {
     "@apollo/client": "^3.1.4",
     "@primer/components": "^20.0.0",

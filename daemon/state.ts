@@ -15,7 +15,7 @@ export function setState(newState: Partial<State>) {
 export async function initState(rootDir: string) {
   setState({
     repos: await exec(
-      path.resolve("./scripts/git-list-repo.sh"),
+      path.resolve("../scripts/git-list-repo.sh"),
       [rootDir],
       repo
     ),

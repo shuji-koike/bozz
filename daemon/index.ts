@@ -1,8 +1,10 @@
 import express from "express"
-import config from "~/config"
-import { initState, getState } from "~/src/state"
+import config from "../config"
+import { initState, getState } from "./state"
 
 let booted = false
+
+boot()
 
 export async function boot() {
   if (booted) return
