@@ -6,12 +6,17 @@ import { UserFragment, User } from "./User"
 import { Bozz } from "./Bozz"
 
 export default function Home() {
+  return <Bozz />
+}
+
+export function Home2() {
   const { data, loading, error } = useQuery<QueryViewer>(queryViewer)
   return (
-    <QuerySuspense loading={loading} error={error}>
-      <User frag={data?.viewer} />
-      <Bozz />
-    </QuerySuspense>
+    <>
+      <QuerySuspense loading={loading} error={error}>
+        <User frag={data?.viewer} />
+      </QuerySuspense>
+    </>
   )
 }
 
