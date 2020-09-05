@@ -13,16 +13,16 @@ export const Input: React.FC<InputProps> = ({
   storage,
   ...props
 }) => {
-  const [value, setValue] = useStorage(name, storage)
+  const { value, setValue } = useStorage(name, storage)
   return (
     <input
       {...props}
-      value={value as string} //TODO
+      value={value}
       name={name}
       placeholder={placeholder}
       onChange={useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
-          ;(setValue as (value: string) => {})(e.target.value) //TODO
+          setValue(e.target.value)
           onChange?.(e)
         },
         [setValue, onChange]

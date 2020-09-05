@@ -8,7 +8,7 @@ export function isDefined<T>(value: T | undefined): value is T {
   return value !== undefined
 }
 
-export function parse<A>(json: string): A | null {
+export function tryParse<A>(json: string): A | null {
   try {
     return JSON.parse(json)
   } catch (error) {
@@ -24,17 +24,17 @@ export function nodes<T extends Object>(
 }
 
 export function useStorage(name: string, storage?: Storage) {
-  const [state, setState] = useState(storage?.getItem(name) || "")
-  return [
-    state,
-    useCallback(
+  const [value, setValue] = useState(storage?.getItem(name) || "")
+  return {
+    value,
+    setValue: useCallback(
       function persistState(value: string) {
         storage?.setItem(name, value)
-        setState(value)
+        setValue(value)
       },
       [name, storage]
     ),
-  ]
+  }
 }
 
 export class Params {
