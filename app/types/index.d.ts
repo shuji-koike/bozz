@@ -14,7 +14,9 @@ interface Repo {
   packages: Package[]
 }
 
-interface GitBranch {
+type GitBranch = GitRefInfo & GitBranchInfo
+
+interface GitRefInfo {
   refname: string
   objecttype: "blob" | "tree" | "commit" | "tag"
   objectname: string
@@ -26,6 +28,11 @@ interface GitBranch {
   author: string
   committer: string
   isHead: boolean
+}
+
+interface GitBranchInfo {
+  behind: number
+  ahead: number
 }
 
 interface Package {

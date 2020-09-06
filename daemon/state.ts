@@ -2,7 +2,7 @@ import { resolve } from "path"
 import execa from "execa"
 import fs from "fs-extra-promise"
 import config from "../config"
-import { nonNull, tryParse } from "../src/util"
+import { branches, packages } from "./git"
 
 const state: State = { timestamp: 0 }
 
@@ -28,81 +28,9 @@ export async function repo(path: string): Promise<Repo> {
     owner,
     name,
     path,
-    packages: await packages(path),
+    packages: await Promise.all((await packages(path)).map(npm)),
     branches: await branches(path),
   }
-}
-
-export async function packages(path: string): Promise<Package[]> {
-  const stdout = await git(path, [
-    "ls-files",
-    "package.json",
-    "**/package.json",
-  ])
-  return Promise.all(
-    stdout
-      .split("\n")
-      .map(e => resolve(path, e))
-      .map(npm)
-  )
-}
-
-export function git<A>(path: string, args: string[]) {
-  return execa("git", ["-C", `${path}/.git`, ...args])
-    .then(({ stdout, stderr }) => {
-      if (stderr) console.warn(stderr)
-      return stdout
-    })
-    .catch(reason => {
-      console.warn(reason)
-      return ""
-    })
-}
-
-export async function branches(path: string): Promise<GitBranch[]> {
-  // https://git-scm.com/docs/git-for-each-ref
-  const format = {
-    refname: "%(refname)",
-    objecttype: "%(objecttype)",
-    objectname: "%(objectname)",
-    objectsize: "%(objectsize)",
-    upstream: "%(upstream)",
-    authordate: "%(authordate)",
-    subject: "%(contents:subject)",
-    body: "%(contents:body)",
-    author: "%(author)",
-    committer: "%(committer)",
-    HEAD: "%(HEAD)",
-  }
-  async function toBranch({
-    objecttype,
-    objectsize,
-    upstream,
-    authordate,
-    HEAD,
-    ...obj
-  }: Record<keyof typeof format, string>): Promise<GitBranch> {
-    return {
-      ...obj,
-      objecttype: objecttype as GitBranch["objecttype"],
-      objectsize: Number(objectsize),
-      upstream: upstream || null,
-      authordate: new Date(),
-      isHead: HEAD == "*",
-    }
-  }
-  const stdout = await git(path, [
-    "for-each-ref",
-    "--format",
-    JSON.stringify(format),
-  ])
-  return Promise.all(
-    stdout
-      .split("\n")
-      .map<typeof format | null>(tryParse)
-      .filter(nonNull)
-      .map(toBranch)
-  )
 }
 
 export async function npm(path: string): Promise<Package> {
