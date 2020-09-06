@@ -6,10 +6,15 @@ import { QuerySuspense } from "./QuerySuspense"
 import { UserFragment, User } from "./User"
 
 export default function Home() {
-  return <Bozz />
+  return (
+    <>
+      <Bozz />
+      <Github />
+    </>
+  )
 }
 
-export function Home2() {
+function Github() {
   const { data, loading, error } = useQuery<QueryViewer>(queryViewer)
   return (
     <>
