@@ -1,7 +1,13 @@
-import React, { useState } from "react"
+import React, { useState, useRef } from "react"
 import { useBozz } from "~/hooks"
 import styled from "styled-components"
-import { Breadcrumb, BranchName, ButtonGroup, Button } from "@primer/components"
+import {
+  Breadcrumb,
+  BranchName,
+  ButtonGroup,
+  Button,
+  CounterLabel,
+} from "@primer/components"
 import { counterSlice } from "~/store"
 import { useDispatch, useSelector } from "react-redux"
 
@@ -40,34 +46,54 @@ export const BozzRepo: React.FC<Repo> = ({ packages, branches, ...repo }) => {
 export const BozzBranches: React.FC<Pick<Repo, "branches">> = ({
   branches,
 }) => {
+  const [open, setOpen] = useState<boolean | undefined>()
   return (
     <StyledDetails
-      label={branches
-        .filter(e => e.refname.startsWith("refs/heads/"))
-        .map(e => (
-          <BozzBranch key={e.refname} branch={e}></BozzBranch>
-        ))}
-      visible={!!branches.length}>
-      {branches.map(e => (
-        <BozzBranch key={e.refname} branch={e}></BozzBranch>
+      label={
+        !open &&
+        branches
+          .filter(e => e.refname.startsWith("refs/heads/"))
+          .map(branch => (
+            <BozzBranch key={branch.refname} branch={branch}></BozzBranch>
+          ))
+      }
+      visible={!!branches.length}
+      onChangeOpen={setOpen}>
+      {branches.map(branch => (
+        <BozzBranch key={branch.refname} branch={branch}></BozzBranch>
       ))}
     </StyledDetails>
   )
 }
 
 export const BozzBranch: React.FC<{ branch: GitBranch }> = ({ branch }) => {
+  function backgroundColor() {
+    if (branch.objecttype === "tag") return "#FBE6FF"
+    if (branch.refname.startsWith("refs/heads/")) return "#E6F7FF"
+    if (branch.refname.startsWith("refs/remotes/")) return "#FFE6E6"
+    return "#eee"
+  }
   return (
-    <StyledBranchName>
+    <StyledBranchName backgroundColor={backgroundColor()}>
       {branch.refname.replace(/^refs\/(heads|remotes|tags)\//, "")}
-      {branch.ahead ? " *" + branch.ahead : ""}
-      {branch.behind ? " ~" + branch.behind : ""}
+      <StyledCounterLabel>
+        {branch.ahead ? "" + branch.ahead : ""}
+      </StyledCounterLabel>
+      <StyledCounterLabel>
+        {branch.behind ? "~" + branch.behind : ""}
+      </StyledCounterLabel>
+      <StyledCounterLabel>{branch.objectname.slice(0, 7)}</StyledCounterLabel>
     </StyledBranchName>
   )
 }
 
+const StyledCounterLabel = styled(CounterLabel)``
 const StyledBranchName = styled(BranchName)`
   & + & {
     margin-left: 1em;
+  }
+  ${StyledCounterLabel} {
+    margin-left: 0.5em;
   }
 `
 
@@ -117,8 +143,8 @@ const ListItem: React.FC<{ label?: React.ReactNode; visible?: boolean }> = ({
   label,
   visible = true,
   children,
-}) =>
-  visible ? (
+}) => {
+  return visible ? (
     <div>
       {label && <span>{label}</span>}
       {children}
@@ -126,6 +152,7 @@ const ListItem: React.FC<{ label?: React.ReactNode; visible?: boolean }> = ({
   ) : (
     <></>
   )
+}
 
 export const StyledListItem = styled(ListItem)``
 
@@ -133,16 +160,22 @@ const Details: React.FC<
   React.DetailsHTMLAttributes<HTMLElement> & {
     label?: React.ReactNode
     visible?: boolean
+    onChangeOpen?: (open: boolean | undefined) => void
   }
-> = ({ label, visible = true, children, ...props }) =>
-  visible ? (
-    <details {...props}>
+> = ({ label, visible = true, onChangeOpen, children, ...props }) => {
+  const ref = useRef<HTMLDetailsElement>(null)
+  return visible ? (
+    <details
+      ref={ref}
+      onToggle={() => onChangeOpen?.(ref.current?.open)}
+      {...props}>
       <summary>{label}</summary>
       <>{children}</>
     </details>
   ) : (
     <></>
   )
+}
 
 export const StyledDetails = styled(Details)`
   > summary {
