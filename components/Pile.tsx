@@ -1,13 +1,13 @@
 import { gql } from "@apollo/client"
 import React from "react"
 import { GithubItemFragmentRepository } from "../types/GithubItemFragmentRepository"
+import { QueryOrganizationPileVariables } from "../types/QueryOrganizationPile"
+import { QueryRepositoryPileVariables } from "../types/QueryRepositoryPile"
 import {
   UserPileFragment,
   UserPileFragment_pullRequests_nodes,
   UserPileFragment_issues_nodes,
 } from "../types/UserPileFragment"
-import { QueryOrganizationPileVariables } from "../types/QueryOrganizationPile"
-import { QueryRepositoryPileVariables } from "../types/QueryRepositoryPile"
 import { GithubItem, GithubItemFragment } from "./GithubItem"
 import { PagerMore, PagerUtil } from "./Pager"
 

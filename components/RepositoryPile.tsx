@@ -1,5 +1,6 @@
 import { gql, useQuery } from "@apollo/client"
 import React from "react"
+import { useParams } from "react-router-dom"
 import { nodes } from "~/src/util"
 import {
   QueryRepositoryPile,
@@ -8,7 +9,6 @@ import {
 import { GithubItem, GithubItemFragment } from "./GithubItem"
 import { PagerMore } from "./Pager"
 import { fragments, Pile } from "./Pile"
-import { useParams } from "react-router-dom"
 import { QuerySuspense } from "./QuerySuspense"
 
 export default function RepositoryPilePage() {

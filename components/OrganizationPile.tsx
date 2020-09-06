@@ -1,13 +1,13 @@
 import { gql, useQuery } from "@apollo/client"
 import React from "react"
+import { useParams } from "react-router-dom"
+import { nodes } from "~/src/util"
 import {
   QueryOrganizationPile,
   QueryOrganizationPileVariables,
 } from "../types/QueryOrganizationPile"
 import { GithubItem, GithubItemFragment } from "./GithubItem"
 import { fragments, Pile } from "./Pile"
-import { useParams } from "react-router-dom"
-import { nodes } from "~/src/util"
 import { QuerySuspense } from "./QuerySuspense"
 
 export default function OrganizationPilePage() {
