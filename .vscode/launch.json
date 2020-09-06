@@ -7,13 +7,6 @@
       "name": "yarn start",
       "runtimeExecutable": "yarn",
       "runtimeArgs": ["start"]
-    },
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "yarn dev",
-      "runtimeExecutable": "yarn",
-      "runtimeArgs": ["dev"]
     }
   ]
 }

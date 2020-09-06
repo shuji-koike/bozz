@@ -1,6 +1,6 @@
 import config from "../config"
 import { initState } from "./state"
-import { listen } from "./daemon"
+import { listen, run } from "./daemon"
 
 let booted = false
 
@@ -10,7 +10,8 @@ setTimeout(async function boot() {
   booted = true
   try {
     await initState(config.rootDir)
-    listen(config.host, config.port)
+    listen(config.host, config.port, "http://localhost:3000/")
+    run("yarn", ["dev"], "..")
     console.info("daemon: ready")
   } catch (error) {
     console.error(error)
