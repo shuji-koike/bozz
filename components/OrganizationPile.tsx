@@ -6,37 +6,42 @@ import {
 } from "../types/QueryOrganizationPile"
 import { GithubItem, GithubItemFragment } from "./GithubItem"
 import { fragments, Pile } from "./Pile"
+import { useParams } from "react-router-dom"
+import { nodes } from "~/src/util"
+import { QuerySuspense } from "./QuerySuspense"
 
-export default function OrganizationPilePage(
-  variables: QueryOrganizationPileVariables
-) {
+export default function OrganizationPilePage() {
+  const params = useParams<{ login: string }>()
+  return <OrganizationPile {...params} />
+}
+
+function OrganizationPile(variables: QueryOrganizationPileVariables) {
   const { data, loading, error } = useQuery<
     QueryOrganizationPile,
     QueryOrganizationPileVariables
   >(query, { variables })
-  if (loading) return <p>Loading...</p>
-  if (error) return <p>{error.message}</p>
-  if (!data || !data.organization) return <p>data is null</p>
   return (
-    <section>
-      <header>
-        {data.organization.repositories.nodes?.map(e => (
-          <GithubItem
-            key={e?.id}
-            frag={e}
-            link={`/${e?.owner.login}/${e?.name}/pile`}
-          />
+    <QuerySuspense loading={loading} error={error}>
+      <section>
+        <header>
+          {nodes(data?.organization?.repositories).map(e => (
+            <GithubItem
+              key={e.id}
+              frag={e}
+              link={`/${e.owner.login}/${e.name}/pile`}
+            />
+          ))}
+        </header>
+        {nodes(data?.organization?.membersWithRole).map(e => (
+          <React.Fragment key={e.id}>
+            <p>
+              <GithubItem frag={e} />
+            </p>
+            <Pile data={e} variables={variables}></Pile>
+          </React.Fragment>
         ))}
-      </header>
-      {data.organization.membersWithRole.nodes?.map(e => (
-        <React.Fragment key={e?.id}>
-          <p>
-            <GithubItem frag={e} />
-          </p>
-          <Pile data={e!}></Pile>
-        </React.Fragment>
-      ))}
-    </section>
+      </section>
+    </QuerySuspense>
   )
 }
 
