@@ -62,7 +62,7 @@ export async function branches(path: string): Promise<GitBranch[]> {
       objectsize: Number(objectsize),
       upstream: upstream || null,
       authordate: new Date(),
-      isHead: HEAD == "*",
+      isHead: HEAD === "*",
       behind,
       ahead,
     }

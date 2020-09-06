@@ -35,14 +35,13 @@ function listen(host: string, port: number) {
   app.get("/.bozz", (req, res) => {
     console.info(req.url)
     res.send(getState())
-    run("yarn", ["dev"])
   })
   app.use((req, res) => {
     const target = resolveProxyTarget(req.url)
     console.debug("proxy:", target, req.url)
     proxy.web(req, res, { target }, error => {
       console.warn(error.message)
-      res.redirect("/.bozz")
+      res.send("error")
     })
   })
   const server = app.listen(port, host)

@@ -29,10 +29,10 @@ const ContextProvider: React.FC = ({ children }) => {
   return <UserContext.Provider value={user}>{children}</UserContext.Provider>
 }
 
-export const BozzContext = createContext<State>({ timestamp: 0 })
+export const BozzContext = createContext<State>({})
 
 const BozzProvider: React.FC = ({ children }) => {
-  const [state, setState] = useState<State>({ timestamp: 0 })
+  const [state, setState] = useState<State>({})
   useEffect(() => {
     fetch("/.bozz")
       .then<State>(e => e.json())

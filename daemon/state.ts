@@ -4,7 +4,7 @@ import fs from "fs-extra-promise"
 import config from "../config"
 import { branches, packages } from "./git"
 
-const state: State = { timestamp: 0 }
+const state: State = {}
 
 export function getState() {
   initState(config.rootDir)
@@ -12,7 +12,7 @@ export function getState() {
 }
 
 export function setState(newState: Partial<State>) {
-  Object.assign(state, newState)
+  Object.assign(state, newState, { count: (state.count || 0) + 1 })
 }
 
 export async function initState(rootDir: string) {
