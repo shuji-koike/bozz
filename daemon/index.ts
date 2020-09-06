@@ -1,6 +1,6 @@
 import config from "../config"
-import { initState } from "./state"
 import { listen, run } from "./daemon"
+import { initState } from "./state"
 
 let booted = false
 

@@ -1,10 +1,10 @@
 import { AvatarPair, Avatar, Popover } from "@primer/components"
 import React, { useContext, useState } from "react"
 import styled from "styled-components"
-import { UserContext } from "~/components/Provider"
+import { UserContext } from "~/components/App"
 import { loginWithGithub, logout } from "~/src/firebase"
-import { Form } from "./Form"
 import { Button } from "./Button"
+import { Form } from "./Form"
 import { Input } from "./Input"
 
 export const Auth: React.FC = () => {

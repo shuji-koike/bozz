@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext, useCallback } from "react"
 import { app } from "~/src/firebase"
-import { BozzContext } from "~/components/Provider"
 
 export function useAuth() {
   const [user, setAuthUser] = useState<AuthUser>()
@@ -27,8 +26,4 @@ export function useStorage(name: string, storage?: Storage) {
       [name, storage]
     ),
   }
-}
-
-export function useBozz() {
-  return useContext(BozzContext)
 }

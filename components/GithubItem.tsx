@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client"
-import { Link } from "react-router-dom"
 import React, { createElement } from "react"
+import { Link } from "react-router-dom"
 import { GithubFragment } from "../types"
 import { GithubIcon } from "./GithubIcon"
 

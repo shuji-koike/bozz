@@ -1,6 +1,3 @@
-import React, { useState, useRef } from "react"
-import { useBozz } from "~/hooks"
-import styled from "styled-components"
 import {
   Breadcrumb,
   BranchName,
@@ -8,11 +5,14 @@ import {
   Button,
   CounterLabel,
 } from "@primer/components"
-import { counterSlice } from "~/store"
+import React, { useState, useRef, useContext } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import styled from "styled-components"
+import { counterSlice } from "~/store"
+import { BozzContext } from "~/components/App"
 
 export const Bozz: React.FC = () => {
-  const bozz = useBozz()
+  const bozz = useContext(BozzContext)
   useSelector<State>(e => e.count)
   return (
     <>

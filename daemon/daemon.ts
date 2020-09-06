@@ -1,8 +1,8 @@
-import express from "express"
-import { getState } from "./state"
-import { createProxyServer } from "http-proxy"
-import execa from "execa"
 import http from "http"
+import execa from "execa"
+import express from "express"
+import { createProxyServer } from "http-proxy"
+import { getState } from "./state"
 
 export function listen(host: string, port: number, target: string) {
   const app = express()

@@ -8,7 +8,7 @@
     "start": "yarn workspace daemon run start",
     "build": "react-app-rewired build",
     "lint:prettier": "prettier --write '**/*.{js,jsx,ts,tsx,json}'",
-    "lint:eslint": "eslint",
+    "lint:eslint": "eslint . --ext .jsx,.js,.tsx,.ts",
     "apollo:codegen": "apollo client:codegen --target typescript --tsFileExtension d.ts --useReadOnlyTypes --includes=**/*.tsx --outputFlat ./types --watch",
     "deploy": "firebase deploy"
   },
