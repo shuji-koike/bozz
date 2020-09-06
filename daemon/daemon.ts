@@ -2,8 +2,10 @@ import express from "express"
 import { getState } from "./state"
 import { createProxyServer } from "http-proxy"
 import execa from "execa"
+import http from "http"
 
 const proxy = createProxyServer({
+  target: "http://localhost:3000/",
   ws: true,
   xfwd: true,
   changeOrigin: true,
@@ -27,7 +29,9 @@ export function listen(host: string, port: number) {
       res.send("error")
     })
   })
-  const server = app.listen(port, host)
+  const server = http.createServer(app)
+  server.on("upgrade", proxy.ws.bind(proxy))
+  server.listen(port, host)
   process.on("SIGTERM", () => server.close())
   console.info("listen:", `http://${host}:${port}/`)
 }
