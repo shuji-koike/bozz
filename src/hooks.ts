@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useCallback } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { app } from "~/src/firebase"
 
 export function useAuth() {

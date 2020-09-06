@@ -1,5 +1,5 @@
 import React, { useCallback } from "react"
-import { useStorage } from "../hooks"
+import { useStorage } from "../src/hooks"
 
 type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "name"> & {
   name: string

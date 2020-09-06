@@ -9,7 +9,7 @@ import React, { useState, useRef, useContext } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import styled from "styled-components"
 import { BozzContext } from "~/components/App"
-import { counterSlice } from "~/store"
+import { counterSlice } from "~/src/store"
 
 export const Bozz: React.FC = () => {
   const bozz = useContext(BozzContext)

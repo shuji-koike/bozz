@@ -1,15 +1,17 @@
+import { BaseStyles } from "@primer/components"
 import React from "react"
 import { ToastContainer } from "react-toastify"
 import styled from "styled-components"
 import { Header } from "./Header"
+import "react-toastify/dist/ReactToastify.css"
 
 export const Layout: React.FC = ({ children }) => {
   return (
-    <main>
+    <BaseStyles as="main">
       <Header></Header>
       {children}
       <StyledToastContainer position="bottom-center" />
-    </main>
+    </BaseStyles>
   )
 }
 
