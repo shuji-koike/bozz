@@ -45,20 +45,22 @@ export const BozzBranches: React.FC<Pick<Repo, "branches">> = ({
       label={branches
         .filter(e => e.refname.startsWith("refs/heads/"))
         .map(e => (
-          <BozzBranch key={e.refname} {...e}></BozzBranch>
+          <BozzBranch key={e.refname} branch={e}></BozzBranch>
         ))}
       visible={!!branches.length}>
       {branches.map(e => (
-        <BozzBranch key={e.refname} {...e}></BozzBranch>
+        <BozzBranch key={e.refname} branch={e}></BozzBranch>
       ))}
     </StyledDetails>
   )
 }
 
-export const BozzBranch: React.FC<GitBranch> = ({ refname }) => {
+export const BozzBranch: React.FC<{ branch: GitBranch }> = ({ branch }) => {
   return (
     <StyledBranchName>
-      {refname.replace(/^refs\/(heads|remotes|tags)\//, "")}
+      {branch.refname.replace(/^refs\/(heads|remotes|tags)\//, "")}
+      {branch.ahead ? " *" + branch.ahead : ""}
+      {branch.behind ? " ~" + branch.behind : ""}
     </StyledBranchName>
   )
 }
