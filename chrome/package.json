@@ -1,0 +1,8 @@
+{
+  "name": "@bozz/chrome-extension",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "webpack-extension-reloader": "^1.1.4"
+  }
+}
