@@ -2,7 +2,11 @@
   "name": "@bozz/chrome-extension",
   "version": "0.1.0",
   "private": true,
+  "dependencies": {
+    "jquery": "^3.5.1"
+  },
   "devDependencies": {
+    "copy-webpack-plugin": "^6.1.0",
     "webpack-extension-reloader": "^1.1.4"
   }
 }

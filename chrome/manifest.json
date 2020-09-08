@@ -4,15 +4,10 @@
   "description": "open a file from github",
   "manifest_version": 2,
   "permissions": ["https://github.com/", "activeTab"],
-  "background": {
-    "scripts": ["background.js"],
-    "persistent": false
-  },
   "content_scripts": [
     {
       "matches": ["https://github.com/*"],
-      "css": ["index.css"],
-      "js": ["build/main.js"]
+      "js": ["index.js"]
     }
   ]
 }
