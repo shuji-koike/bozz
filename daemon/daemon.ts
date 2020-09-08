@@ -15,7 +15,7 @@ export function listen(host: string, port: number, target: string) {
     console.debug("proxy:", target, req.url)
     proxy.web(req, res, { target }, error => {
       console.warn(error.message)
-      res.send("error")
+      res.send("proxy error")
     })
   })
   const server = http.createServer(app)
