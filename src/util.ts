@@ -6,11 +6,15 @@ export function isDefined<T>(value: T | undefined): value is T {
   return value !== undefined
 }
 
+export function nonEmptyString(value: string): boolean {
+  return value !== ""
+}
+
 export function tryParse<A>(json: string): A | null {
   try {
     return JSON.parse(json)
   } catch (error) {
-    console.warn(error)
+    console.warn(json)
   }
   return null
 }

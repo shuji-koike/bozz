@@ -1,17 +1,20 @@
 import { resolve } from "path"
 import execa from "execa"
-import { nonNull, tryParse } from "../src/util"
+import { nonNull, nonEmptyString, tryParse } from "../src/util"
 
-export function git<A>(path: string, args: string[]) {
-  return execa("git", ["-C", `${path}/.git`, ...args])
-    .then(({ stdout, stderr }) => {
-      if (stderr) console.warn(stderr)
-      return stdout
-    })
-    .catch(reason => {
-      console.warn(reason)
-      return ""
-    })
+export async function git<A>(path: string, args: string[]) {
+  try {
+    const { stdout, stderr } = await execa("git", [
+      "-C",
+      `${path}/.git`,
+      ...args,
+    ])
+    if (stderr) console.warn(stderr)
+    return stdout
+  } catch (reason) {
+    console.warn(reason)
+    return ""
+  }
 }
 
 export async function packages(path: string): Promise<string[]> {
@@ -70,11 +73,13 @@ export async function branches(path: string): Promise<GitBranch[]> {
   const stdout = await git(path, [
     "for-each-ref",
     "--format",
-    JSON.stringify(format),
+    JSON.stringify(format) + "%00",
   ])
   return Promise.all(
     stdout
-      .split("\n")
+      .split("\0")
+      .map(e => e.trim().replace(/\n/g, "\\n"))
+      .filter(nonEmptyString)
       .map<typeof format | null>(tryParse)
       .filter(nonNull)
       .map(toBranch)
