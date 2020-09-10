@@ -7,8 +7,6 @@ import "react-toastify/dist/ReactToastify.css"
 
 export const Layout: React.FC = ({ children }) => {
   const [layout, setLayout] = useState<LayoutState>({})
-  console.log(layout)
-
   return (
     <LayoutContext.Provider value={{ layout, setLayout }}>
       <BaseStyles as="main">

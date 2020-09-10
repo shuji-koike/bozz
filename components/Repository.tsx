@@ -10,6 +10,7 @@ import { GithubLabel, GithubLabelFragment } from "./Labels"
 import { QuerySuspense } from "./QuerySuspense"
 import { TabNav } from "@primer/components"
 import { HeaderSlot } from "./Layout"
+import { GithubRef, GithubRefFragment } from "./GithubRef"
 
 export default function Page() {
   const { owner, name } = useParams<{ owner: string; name: string }>()
@@ -41,7 +42,13 @@ const Repository: React.FC<{
       </TabNav>
       {
         [
-          <></>,
+          <>
+            {nodes(frag?.refs).map(e => (
+              <p key={e.name}>
+                <GithubRef key={e.name} frag={e}></GithubRef>
+              </p>
+            ))}
+          </>,
           <></>,
           <>
             {nodes(frag?.labels).map(e => (
@@ -68,7 +75,13 @@ const query = gql`
           ...LabelFragment
         }
       }
+      refs(first: 100, refPrefix: "refs/heads/") {
+        nodes {
+          ...RefFragment
+        }
+      }
     }
   }
   ${GithubLabelFragment}
+  ${GithubRefFragment}
 `

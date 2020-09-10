@@ -3,8 +3,6 @@ import styled from "styled-components"
 import { Auth } from "./Auth"
 
 export const Header: React.FC = ({ children }) => {
-  console.log(children)
-
   return (
     <StyledHeader>
       <StyledDiv>
