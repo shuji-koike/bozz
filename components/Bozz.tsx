@@ -7,10 +7,10 @@ import {
 } from "@primer/components"
 import React, { useState, useRef, useContext } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import { NavLink } from "react-router-dom"
 import styled from "styled-components"
 import { BozzContext } from "~/components/App"
 import { counterSlice } from "~/src/store"
-import { NavLink } from "react-router-dom"
 
 export const Bozz: React.FC = () => {
   const bozz = useContext(BozzContext)

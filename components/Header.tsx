@@ -1,4 +1,5 @@
 import React from "react"
+import { NavLink } from "react-router-dom"
 import styled from "styled-components"
 import { Auth } from "./Auth"
 
@@ -6,7 +7,9 @@ export const Header: React.FC = ({ children }) => {
   return (
     <StyledHeader>
       <StyledDiv>
-        <h1>bozz</h1>
+        <h1>
+          <NavLink to="/">bozz</NavLink>
+        </h1>
         <nav>{children}</nav>
       </StyledDiv>
       <Auth />

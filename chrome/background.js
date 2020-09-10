@@ -1,1 +1,1 @@
-console.log("background.js")
+console.info("background.js")

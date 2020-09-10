@@ -1,4 +1,5 @@
 import { gql, useQuery } from "@apollo/client"
+import { TabNav } from "@primer/components"
 import React, { useState } from "react"
 import { useParams } from "react-router-dom"
 import { nodes } from "../src/util"
@@ -6,11 +7,10 @@ import {
   QueryRepository,
   QueryRepository_repository,
 } from "../types/QueryRepository"
-import { GithubLabel, GithubLabelFragment } from "./Labels"
-import { QuerySuspense } from "./QuerySuspense"
-import { TabNav } from "@primer/components"
-import { HeaderSlot } from "./Layout"
 import { GithubRef, GithubRefFragment } from "./GithubRef"
+import { GithubLabel, GithubLabelFragment } from "./Labels"
+import { HeaderSlot } from "./Layout"
+import { QuerySuspense } from "./QuerySuspense"
 
 export default function Page() {
   const { owner, name } = useParams<{ owner: string; name: string }>()

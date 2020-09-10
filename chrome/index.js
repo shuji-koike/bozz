@@ -1,8 +1,8 @@
-console.log("index6.js")
+console.info("index6.js")
 document.addEventListener(
   "click",
   e => {
-    console.log(e.target, this)
+    console.info(e.target, this)
   },
   false
 )

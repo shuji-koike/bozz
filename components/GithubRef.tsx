@@ -1,9 +1,9 @@
 import { gql } from "@apollo/client"
 import { BranchName, BranchNameProps, CounterLabel } from "@primer/components"
 import React from "react"
+import { nodes } from "~/src/util"
 import { RefFragment } from "../types/RefFragment"
 import { GithubLabelFragment, GithubLabel } from "./Labels"
-import { nodes } from "~/src/util"
 
 export const GithubRef: React.FC<
   BranchNameProps & {
