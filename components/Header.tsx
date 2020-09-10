@@ -3,23 +3,34 @@ import styled from "styled-components"
 import { Auth } from "./Auth"
 
 export const Header: React.FC = ({ children }) => {
+  console.log(children)
+
   return (
     <StyledHeader>
-      <h1>bozz</h1>
+      <StyledDiv>
+        <h1>bozz</h1>
+        <nav>{children}</nav>
+      </StyledDiv>
       <Auth />
-      {children}
     </StyledHeader>
   )
 }
 
 const StyledHeader = styled.header`
   display: flex;
-  padding: 4px 16px;
+  padding: 4px 0;
   align-items: center;
+`
+const StyledDiv = styled.div`
+  flex-grow: 1;
+
+  > * {
+    display: inline-block;
+  }
 
   > h1 {
-    flex-grow: 1;
     margin: 0;
+    margin-right: 1rem;
     font-size: 2rem;
     line-height: 2rem;
   }

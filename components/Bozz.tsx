@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux"
 import styled from "styled-components"
 import { BozzContext } from "~/components/App"
 import { counterSlice } from "~/src/store"
+import { NavLink } from "react-router-dom"
 
 export const Bozz: React.FC = () => {
   const bozz = useContext(BozzContext)
@@ -31,8 +32,12 @@ export const BozzRepo: React.FC<Repo> = ({ packages, branches, ...repo }) => {
       onToggle={() => setOpen(open)}
       label={
         <Breadcrumb>
-          <Breadcrumb.Item>{repo.owner}</Breadcrumb.Item>
-          <Breadcrumb.Item>{repo.name}</Breadcrumb.Item>
+          <Breadcrumb.Item as={NavLink} to={`/${repo.owner}`}>
+            {repo.owner}
+          </Breadcrumb.Item>
+          <Breadcrumb.Item as={NavLink} to={`/${repo.owner}/${repo.name}`}>
+            {repo.name}
+          </Breadcrumb.Item>
         </Breadcrumb>
       }>
       <ul>

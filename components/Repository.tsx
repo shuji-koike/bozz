@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client"
-import React from "react"
+import React, { useState } from "react"
 import { useParams } from "react-router-dom"
 import { nodes } from "../src/util"
 import {
@@ -8,6 +8,8 @@ import {
 } from "../types/QueryRepository"
 import { GithubLabel, GithubLabelFragment } from "./Labels"
 import { QuerySuspense } from "./QuerySuspense"
+import { TabNav } from "@primer/components"
+import { HeaderSlot } from "./Layout"
 
 export default function Page() {
   const { owner, name } = useParams<{ owner: string; name: string }>()
@@ -24,14 +26,32 @@ export default function Page() {
 const Repository: React.FC<{
   frag: QueryRepository_repository | null | undefined
 }> = ({ frag }) => {
+  const [tab, setTab] = useState(0)
   return (
     <>
-      {frag?.owner.login}/{frag?.name}
-      {nodes(frag?.labels).map(e => (
-        <p key={e.name}>
-          <GithubLabel key={e.name} frag={e}></GithubLabel>
-        </p>
-      ))}
+      <HeaderSlot deps={[frag]}>
+        {frag?.owner.login}/{frag?.name}
+      </HeaderSlot>
+      <TabNav aria-label="Main">
+        {["Branches", "Issues", "Labels"].map((e, i) => (
+          <TabNav.Link key={i} selected={tab === i} onClick={() => setTab(i)}>
+            {e}
+          </TabNav.Link>
+        ))}
+      </TabNav>
+      {
+        [
+          <></>,
+          <></>,
+          <>
+            {nodes(frag?.labels).map(e => (
+              <p key={e.name}>
+                <GithubLabel key={e.name} frag={e}></GithubLabel>
+              </p>
+            ))}
+          </>,
+        ][tab]
+      }
     </>
   )
 }

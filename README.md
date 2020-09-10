@@ -29,3 +29,6 @@ git remote set-head origin -a
 ### Links
 
 - http://localhost:1080/
+- https://developer.github.com/v4/explorer/
+- https://primer.style/components/
+- https://primer.style/octicons/
