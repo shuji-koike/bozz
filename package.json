@@ -23,6 +23,7 @@
     "@reduxjs/toolkit": "^1.4.0",
     "@types/http-proxy": "^1.17.4",
     "apollo": "^2.30.3",
+    "axios": "^0.20.0",
     "dayjs": "^1.8.34",
     "execa": "^4.0.3",
     "express": "^4.17.1",

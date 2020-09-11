@@ -6,9 +6,10 @@ import { getState } from "./state"
 
 export function listen(host: string, port: number, target: string) {
   const app = express()
+  app.use(express.json())
   app.set("json spaces", 2)
-  app.get("/.bozz", (req, res) => {
-    console.info(req.url)
+  app.use("/.bozz", (req, res) => {
+    console.debug("bozz", req.url, req.body)
     res.send(getState())
   })
   app.use((req, res) => {

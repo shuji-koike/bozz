@@ -154,13 +154,17 @@ export interface QueryRepository_repository_refs {
 export interface QueryRepository_repository {
   readonly __typename: "Repository";
   /**
-   * The User owner of the repository.
-   */
-  readonly owner: QueryRepository_repository_owner;
-  /**
    * The name of the repository.
    */
   readonly name: string;
+  /**
+   * The SSH URL to clone this repository
+   */
+  readonly sshUrl: any;
+  /**
+   * The User owner of the repository.
+   */
+  readonly owner: QueryRepository_repository_owner;
   /**
    * A list of labels associated with the repository.
    */

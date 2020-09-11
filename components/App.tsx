@@ -26,11 +26,11 @@ function AppProvider({ children }: React.Props<{}>) {
     <Provider store={store}>
       <GithubProvider fallback={<Auth />}>
         <RateLimit>
-          <ContextProvider>
+          <UserProvider>
             <BozzProvider>
               <>{children}</>
             </BozzProvider>
-          </ContextProvider>
+          </UserProvider>
         </RateLimit>
       </GithubProvider>
     </Provider>
@@ -39,7 +39,7 @@ function AppProvider({ children }: React.Props<{}>) {
 
 export const UserContext = createContext<AuthUser>(null)
 
-const ContextProvider: React.FC = ({ children }) => {
+const UserProvider: React.FC = ({ children }) => {
   const { user } = useAuth()
   return <UserContext.Provider value={user}>{children}</UserContext.Provider>
 }
@@ -50,10 +50,8 @@ const BozzProvider: React.FC = ({ children }) => {
   const [state, setState] = useState<State>({})
   useEffect(() => {
     fetch("/.bozz")
-      .then<State>(e => e.json())
-      .then(res => {
-        setState(res)
-      })
+      .then(e => e.json())
+      .then(e => setState)
   }, [])
   return <BozzContext.Provider value={state}>{children}</BozzContext.Provider>
 }

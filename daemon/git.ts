@@ -26,9 +26,53 @@ export async function packages(path: string): Promise<string[]> {
   return Promise.all(stdout.split("\n").map(e => resolve(path, e)))
 }
 
+export async function commits(path: string, ref: string): Promise<GitCommit[]> {
+  // https://git-scm.com/docs/pretty-formats
+  const format: Record<keyof GitCommit, string> = {
+    hash: "%H",
+    abbreviatedCommitHash: "%h",
+    treeHash: "%T",
+    abbreviatedTreeHash: "%t",
+    parentHashs: "%P",
+    abbreviatedParentHashs: "%p",
+    authorName: "%an",
+    authorEmail: "%ae",
+    authorDate: "%aI",
+    authorRelativeDate: "%ar",
+    committerName: "%cn",
+    committerEmail: "%ce",
+    committerDate: "%cI",
+    committerRelativeDate: "%cr",
+    refNames: "%r",
+    subject: "%S",
+    body: "%b",
+    commitNotes: "%N",
+  }
+  async function toCommit({ ...rest }: typeof format): Promise<GitCommit> {
+    return {
+      ...rest,
+    }
+  }
+  const stdout = await git(path, [
+    "log",
+    "--format=" + JSON.stringify(format) + "%x00",
+    ref,
+  ])
+  return Promise.all(
+    stdout
+      .split("\0")
+      .slice(0, 1) //WIP
+      .map(normalize)
+      .filter(nonEmptyString)
+      .map<typeof format | null>(tryParse)
+      .filter(nonNull)
+      .map(toCommit)
+  )
+}
+
 export async function branches(path: string): Promise<GitBranch[]> {
   // https://git-scm.com/docs/git-for-each-ref
-  const format = {
+  const format: Record<keyof GitRefInfo, string> = {
     refname: "%(refname)",
     objecttype: "%(objecttype)",
     objectname: "%(objectname)",
@@ -39,41 +83,30 @@ export async function branches(path: string): Promise<GitBranch[]> {
     body: "%(contents:body)",
     author: "%(author)",
     committer: "%(committer)",
-    HEAD: "%(HEAD)",
+    isHead: "%(HEAD)",
   }
   async function toBranch({
     objecttype,
     objectsize,
     upstream,
     authordate,
-    HEAD,
+    isHead,
     ...rest
-  }: Record<keyof typeof format, string>): Promise<GitBranch> {
-    const [behind, ahead] = (
-      await git(path, [
-        "rev-list",
-        "--left-right",
-        "--count",
-        `origin/HEAD...${rest.refname}`,
-      ])
-    )
-      .split("\t")
-      .map(Number)
+  }: typeof format): Promise<GitBranch> {
     return {
       ...rest,
       objecttype: objecttype as GitBranch["objecttype"],
       objectsize: Number(objectsize),
       upstream: upstream || null,
       authordate: new Date(),
-      isHead: HEAD === "*",
-      behind,
-      ahead,
+      isHead: isHead === "*",
+      ...(await revListLeftRight(path, `origin/HEAD...${rest.refname}`)),
+      commits: await commits(path, `origin/HEAD...${rest.refname}`),
     }
   }
   const stdout = await git(path, [
     "for-each-ref",
-    "--format",
-    JSON.stringify(format) + "%00",
+    "--format=" + JSON.stringify(format) + "%00",
   ])
   return Promise.all(
     stdout
@@ -84,4 +117,16 @@ export async function branches(path: string): Promise<GitBranch[]> {
       .filter(nonNull)
       .map(toBranch)
   )
+}
+
+export async function revListLeftRight(
+  path: string,
+  ref: string
+): Promise<GitBranchInfo> {
+  const [behind, ahead] = (
+    await git(path, ["rev-list", "--left-right", "--count", ref])
+  )
+    .split("\t")
+    .map(Number)
+  return { behind, ahead }
 }

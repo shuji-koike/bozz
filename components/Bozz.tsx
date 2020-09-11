@@ -24,7 +24,11 @@ export const Bozz: React.FC = () => {
   )
 }
 
-export const BozzRepo: React.FC<Repo> = ({ packages, branches, ...repo }) => {
+export const BozzRepo: React.FC<GitRepo> = ({
+  packages,
+  branches,
+  ...repo
+}) => {
   const [open, setOpen] = useState(true)
   return (
     <StyledDetails
@@ -48,7 +52,7 @@ export const BozzRepo: React.FC<Repo> = ({ packages, branches, ...repo }) => {
   )
 }
 
-export const BozzBranches: React.FC<Pick<Repo, "branches">> = ({
+export const BozzBranches: React.FC<Pick<GitRepo, "branches">> = ({
   branches,
 }) => {
   const [open, setOpen] = useState<boolean | undefined>()
@@ -102,7 +106,7 @@ const StyledBranchName = styled(BranchName)`
   }
 `
 
-export const BozzPackages: React.FC<Pick<Repo, "packages">> = ({
+export const BozzPackages: React.FC<Pick<GitRepo, "packages">> = ({
   packages,
 }) => {
   return (

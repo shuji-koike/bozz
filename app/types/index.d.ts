@@ -3,18 +3,26 @@
 interface State {
   timestamp?: number
   count?: number
-  repos?: Repo[]
+  repos?: GitRepo[]
 }
 
-interface Repo {
+interface GitRepo {
   owner: string
   name: string
   path: string
+  remotes: {
+    origin: GitRemote | null
+    [name: string]: GitRemote
+  }
   branches: GitBranch[]
   packages: Package[]
 }
 
-type GitBranch = GitRefInfo & GitBranchInfo
+interface GitRemote {
+  url: string
+}
+
+type GitBranch = GitRefInfo & GitBranchInfo & GitBranchCommitLog
 
 interface GitRefInfo {
   refname: string
@@ -33,6 +41,33 @@ interface GitRefInfo {
 interface GitBranchInfo {
   behind: number
   ahead: number
+}
+
+interface GitBranchCommitLog {
+  commits?: GitCommit[]
+}
+
+type GitCommit = GitCommitInfo
+
+interface GitCommitInfo {
+  hash: string
+  abbreviatedCommitHash: string
+  treeHash: string
+  abbreviatedTreeHash: string
+  parentHashs: string
+  abbreviatedParentHashs: string
+  authorName: string
+  authorEmail: string
+  authorDate: string
+  authorRelativeDate: string
+  committerName: string
+  committerEmail: string
+  committerDate: string
+  committerRelativeDate: string
+  refNames: string
+  subject: string
+  body: string
+  commitNotes: string
 }
 
 interface Package {
