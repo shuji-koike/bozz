@@ -2,7 +2,7 @@ import { resolve } from "path"
 import execa from "execa"
 import fs from "fs-extra-promise"
 import config from "../config"
-import { branches, git, packages } from "./git"
+import { branches, commits, git, packages } from "./git"
 
 const state: State = {}
 
@@ -28,13 +28,14 @@ export async function repo(path: string): Promise<GitRepo> {
     owner,
     name,
     path,
+    packages: await Promise.all((await packages(path)).map(npm)),
     remotes: {
       origin: {
         url: await git(path, ["remote", "get-url", "origin"]),
       },
     },
-    packages: await Promise.all((await packages(path)).map(npm)),
     branches: await branches(path),
+    commits: await commits(path, "origin/HEAD..HEAD"),
   }
 }
 

@@ -2,6 +2,8 @@ import { resolve } from "path"
 import execa from "execa"
 import { nonNull, nonEmptyString, tryParse, normalize } from "../src/util"
 
+const flag1 = false
+
 export async function git<A>(path: string, args: string[]) {
   try {
     const { stdout, stderr } = await execa("git", [
@@ -30,11 +32,8 @@ export async function commits(path: string, ref: string): Promise<GitCommit[]> {
   // https://git-scm.com/docs/pretty-formats
   const format: Record<keyof GitCommit, string> = {
     hash: "%H",
-    abbreviatedCommitHash: "%h",
     treeHash: "%T",
-    abbreviatedTreeHash: "%t",
     parentHashs: "%P",
-    abbreviatedParentHashs: "%p",
     authorName: "%an",
     authorEmail: "%ae",
     authorDate: "%aI",
@@ -43,15 +42,10 @@ export async function commits(path: string, ref: string): Promise<GitCommit[]> {
     committerEmail: "%ce",
     committerDate: "%cI",
     committerRelativeDate: "%cr",
-    refNames: "%r",
-    subject: "%S",
+    refNames: "%D",
+    subject: "%s",
     body: "%b",
     commitNotes: "%N",
-  }
-  async function toCommit({ ...rest }: typeof format): Promise<GitCommit> {
-    return {
-      ...rest,
-    }
   }
   const stdout = await git(path, [
     "log",
@@ -61,16 +55,17 @@ export async function commits(path: string, ref: string): Promise<GitCommit[]> {
   return Promise.all(
     stdout
       .split("\0")
-      .slice(0, 1) //WIP
       .map(normalize)
       .filter(nonEmptyString)
       .map<typeof format | null>(tryParse)
       .filter(nonNull)
-      .map(toCommit)
   )
 }
 
-export async function branches(path: string): Promise<GitBranch[]> {
+export async function branches(
+  path: string,
+  option: { logs?: boolean } = {}
+): Promise<GitBranch[]> {
   // https://git-scm.com/docs/git-for-each-ref
   const format: Record<keyof GitRefInfo, string> = {
     refname: "%(refname)",
@@ -101,7 +96,9 @@ export async function branches(path: string): Promise<GitBranch[]> {
       authordate: new Date(),
       isHead: isHead === "*",
       ...(await revListLeftRight(path, `origin/HEAD...${rest.refname}`)),
-      commits: await commits(path, `origin/HEAD...${rest.refname}`),
+      commits: option?.logs
+        ? await commits(path, `origin/HEAD..${rest.refname}`)
+        : undefined,
     }
   }
   const stdout = await git(path, [

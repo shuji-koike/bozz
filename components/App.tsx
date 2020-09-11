@@ -51,7 +51,7 @@ const BozzProvider: React.FC = ({ children }) => {
   useEffect(() => {
     fetch("/.bozz")
       .then(e => e.json())
-      .then(e => setState)
+      .then(setState)
   }, [])
   return <BozzContext.Provider value={state}>{children}</BozzContext.Provider>
 }

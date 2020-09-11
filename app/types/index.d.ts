@@ -9,13 +9,14 @@ interface State {
 interface GitRepo {
   owner: string
   name: string
-  path: string
-  remotes: {
+  path?: string
+  packages?: Package[]
+  remotes?: {
     origin: GitRemote | null
     [name: string]: GitRemote
   }
-  branches: GitBranch[]
-  packages: Package[]
+  branches?: GitBranch[]
+  commits?: GitCommit[]
 }
 
 interface GitRemote {
@@ -51,11 +52,8 @@ type GitCommit = GitCommitInfo
 
 interface GitCommitInfo {
   hash: string
-  abbreviatedCommitHash: string
   treeHash: string
-  abbreviatedTreeHash: string
   parentHashs: string
-  abbreviatedParentHashs: string
   authorName: string
   authorEmail: string
   authorDate: string
