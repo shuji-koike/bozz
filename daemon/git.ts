@@ -2,8 +2,6 @@ import { resolve } from "path"
 import execa from "execa"
 import { nonNull, nonEmptyString, tryParse, normalize } from "../src/util"
 
-const flag1 = false
-
 export async function git<A>(path: string, args: string[]) {
   try {
     const { stdout, stderr } = await execa("git", [
