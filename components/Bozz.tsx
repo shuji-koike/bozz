@@ -13,11 +13,11 @@ import { BozzContext } from "~/components/App"
 import { counterSlice } from "~/src/store"
 
 export const Bozz: React.FC = () => {
-  const bozz = useContext(BozzContext)
+  const { repos } = useContext(BozzContext)
   useSelector<State>(e => e.count)
   return (
     <>
-      {bozz.repos?.map(repo => (
+      {repos?.map(repo => (
         <BozzRepo key={repo.path} {...repo} />
       ))}
     </>
