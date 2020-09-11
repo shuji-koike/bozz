@@ -1,6 +1,6 @@
 import { resolve } from "path"
 import execa from "execa"
-import { nonNull, nonEmptyString, tryParse } from "../src/util"
+import { nonNull, nonEmptyString, tryParse, normalize } from "../src/util"
 
 export async function git<A>(path: string, args: string[]) {
   try {
@@ -78,7 +78,7 @@ export async function branches(path: string): Promise<GitBranch[]> {
   return Promise.all(
     stdout
       .split("\0")
-      .map(e => e.trim().replace(/\n/g, "\\n"))
+      .map(normalize)
       .filter(nonEmptyString)
       .map<typeof format | null>(tryParse)
       .filter(nonNull)
