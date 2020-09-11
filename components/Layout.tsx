@@ -52,6 +52,6 @@ export const HeaderSlot: React.FC<{
   useEffect(() => {
     setLayout({ ...layout, nav: children })
     return () => setLayout({ ...layout, nav: null })
-  }, deps)
+  }, deps) // eslint-disable-line react-hooks/exhaustive-deps
   return <></>
 }
