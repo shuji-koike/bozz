@@ -1,13 +1,13 @@
+import firebase from "firebase/app"
 import { useState, useEffect, useCallback } from "react"
-import { app } from "~/src/firebase"
 
 export function useAuth() {
   const [user, setAuthUser] = useState<AuthUser>()
   const [error, setAuthError] = useState<AuthError>()
-  useEffect(() => app.auth().onAuthStateChanged(setAuthUser, setAuthError), [
-    setAuthUser,
-    setAuthError,
-  ])
+  useEffect(
+    () => firebase.app().auth().onAuthStateChanged(setAuthUser, setAuthError),
+    [setAuthUser, setAuthError]
+  )
   return {
     user,
     error,

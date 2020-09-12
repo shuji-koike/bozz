@@ -1,7 +1,7 @@
 import { resolve } from "path"
 import execa from "execa"
 import fs from "fs-extra-promise"
-import config from "../config"
+import { config } from ".."
 import { branches, commits, git, packages } from "./git"
 
 const state: State = {}

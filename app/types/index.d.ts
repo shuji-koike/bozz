@@ -80,6 +80,7 @@ interface Config {
   rootDir?: string
   host?: string
   port?: number
+  firebaseConfig: Object
 }
 
 type AuthUser = firebase.User | null | undefined
