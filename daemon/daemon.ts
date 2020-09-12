@@ -2,18 +2,18 @@ import http from "http"
 import express from "express"
 import { createProxyServer } from "http-proxy"
 import { initState, getState } from "./state"
-import { run } from "./util"
+import { run, runTarget } from "./proc"
 
 let booted = false
 
 export async function boot(config: Config) {
-  console.info("daemon: boot")
+  console.info("daemon:", "boot")
   if (booted) return
   booted = true
   await initState(config.rootDir)
   start(config, "http://localhost:3000/")
-  console.info("daemon: ready")
-  process.on("SIGTERM", () => console.info("daemon: SIGTERM"))
+  console.info("daemon:", "ready")
+  process.on("SIGTERM", () => console.info("daemon:", "exit"))
 }
 
 export function start({ port, host }: Config, target: string) {
@@ -28,8 +28,8 @@ export function start({ port, host }: Config, target: string) {
     console.debug("proxy:", target, req.url)
     proxy.web(req, res, { target }, error => {
       console.warn(error.message)
-      run("yarn", ["dev"])
-      res.send("proxy error")
+      runTarget(target, () => run("yarn", ["dev"]))
+      res.status(202)
     })
   })
   const proxy = createProxyServer({
