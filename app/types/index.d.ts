@@ -3,6 +3,7 @@
 interface State {
   timestamp?: number
   count?: number
+  rootDir?: string
   repos?: GitRepo[]
 }
 

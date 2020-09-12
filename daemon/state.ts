@@ -1,13 +1,12 @@
 import { resolve } from "path"
 import execa from "execa"
 import fs from "fs-extra-promise"
-import { config } from ".."
 import { branches, commits, git, packages } from "./git"
 
 const state: State = {}
 
-export function getState() {
-  initState(config.rootDir)
+export function getState(rootDir?: string) {
+  initState(rootDir ?? state.rootDir)
   return state
 }
 
@@ -18,6 +17,7 @@ export function setState(newState: Partial<State>) {
 export async function initState(rootDir: string = "") {
   setState({
     timestamp: new Date().getTime(),
+    rootDir,
     repos: await exec(resolve("../scripts/git-list-repo.sh"), [rootDir], repo),
   })
 }

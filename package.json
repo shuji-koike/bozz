@@ -2,10 +2,10 @@
   "name": "bozz",
   "version": "0.1.0",
   "private": true,
-  "main": "daemon/index.ts",
+  "main": "index.js",
   "scripts": {
     "dev": "react-app-rewired start",
-    "start": "yarn workspace daemon run start",
+    "start": "node .",
     "build": "react-app-rewired build",
     "lint:prettier": "prettier --write '**/*.{js,jsx,ts,tsx,json}'",
     "lint:eslint": "eslint '**/*.{js,jsx,ts,tsx,json}'",
