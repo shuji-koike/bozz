@@ -15,7 +15,7 @@ export function setState(newState: Partial<State>) {
   Object.assign(state, newState, { count: (state.count || 0) + 1 })
 }
 
-export async function initState(rootDir: string) {
+export async function initState(rootDir: string = "") {
   setState({
     timestamp: new Date().getTime(),
     repos: await exec(resolve("../scripts/git-list-repo.sh"), [rootDir], repo),

@@ -2,9 +2,33 @@ import http from "http"
 import execa from "execa"
 import express from "express"
 import { createProxyServer } from "http-proxy"
-import { getState } from "./state"
+import { getState, initState } from "./state"
 
-export function listen(host: string, port: number, target: string) {
+let booted = false
+
+export async function boot(config: Config) {
+  console.info("daemon: boot")
+  if (booted) return
+  booted = true
+  await initState(config.rootDir)
+  listen({
+    host: config.host,
+    port: config.port,
+    target: "http://localhost:3000/",
+  })
+  run("yarn", ["dev"], "..")
+  console.info("daemon: ready")
+}
+
+export function listen({
+  host = "127.0.0.1",
+  port = 1080,
+  target,
+}: {
+  host?: string
+  port?: number
+  target: string
+}) {
   const app = express()
   app.use(express.json())
   app.set("json spaces", 2)

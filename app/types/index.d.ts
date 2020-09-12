@@ -76,6 +76,12 @@ interface Package {
   scripts?: Record<string, string>
 }
 
+interface Config {
+  rootDir?: string
+  host?: string
+  port?: number
+}
+
 type AuthUser = firebase.User | null | undefined
 type AuthError = firebase.auth.Error | undefined
 
