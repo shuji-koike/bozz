@@ -10,7 +10,7 @@ import { GithubLabel, GithubLabelFragment } from "./Labels"
 import { HeaderSlot } from "./Layout"
 import { QuerySuspense } from "./QuerySuspense"
 
-export default function Page() {
+export default function RepositoryPage() {
   const { owner, name } = useParams<{ owner: string; name: string }>()
   const { data, loading, error } = useQuery<QueryRepository>(query, {
     variables: { owner, name },
@@ -32,7 +32,7 @@ const Repository: React.FC<{
         {frag?.owner.login}/{frag?.name}
       </HeaderSlot>
       <TabNav aria-label="Main">
-        {["Branches", "Issues", "Labels", "GitLog"].map((e, i) => (
+        {["Branches", "Issues", "Labels", "History"].map((e, i) => (
           <TabNav.Link key={i} selected={tab === i} onClick={() => setTab(i)}>
             {e}
           </TabNav.Link>

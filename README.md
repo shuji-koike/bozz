@@ -30,5 +30,6 @@ git remote set-head origin -a
 
 - http://localhost:1080/
 - https://developer.github.com/v4/explorer/
+- https://docs.github.com/en/graphql/reference/objects
 - https://primer.style/components/
 - https://primer.style/octicons/
