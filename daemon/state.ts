@@ -4,10 +4,16 @@ import fs from "fs-extra-promise"
 import { branches, commits, git, packages } from "./git"
 
 const state: State = {}
+let statePromise: Promise<State> | null = null
 
-export function getState(rootDir?: string) {
-  initState(rootDir ?? state.rootDir)
-  return state
+export async function getState(rootDir?: string) {
+  if (statePromise) return statePromise
+  statePromise = new Promise(resolve => {
+    initState(rootDir ?? state.rootDir)
+    resolve(state)
+    statePromise = null
+  })
+  return statePromise
 }
 
 export function setState(newState: Partial<State>) {

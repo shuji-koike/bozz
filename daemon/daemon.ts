@@ -10,8 +10,10 @@ export async function boot(config: Config) {
   console.info("daemon:", "boot")
   if (booted) return
   booted = true
-  await initState(config.rootDir)
-  start(config, "http://localhost:3000/")
+  await Promise.all([
+    initState(config.rootDir),
+    start(config, "http://localhost:3000/"),
+  ])
   console.info("daemon:", "ready")
   process.on("SIGTERM", () => console.info("daemon:", "exit"))
 }
@@ -20,9 +22,9 @@ export function start({ port, host }: Config, target: string) {
   const app = express()
   app.use(express.json())
   app.set("json spaces", 2)
-  app.use("/.bozz", (req, res) => {
+  app.use("/.bozz", async (req, res) => {
     console.debug("bozz", req.url, req.body)
-    res.send(getState())
+    res.send(await getState())
   })
   app.use((req, res) => {
     console.debug("proxy:", target, req.url)

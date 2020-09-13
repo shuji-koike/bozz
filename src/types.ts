@@ -16,4 +16,3 @@ export type GithubFragment =
   | QueryMilestones.QueryMilestones_repository_milestones_nodes_issues_nodes
   | QueryMilestones.QueryMilestones_repository_milestones_nodes_pullRequests_nodes
   | UserPileFragment.UserPileFragment_issues_nodes
-  | UserPileFragment.UserPileFragment_issues_nodes

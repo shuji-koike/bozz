@@ -26,40 +26,6 @@ export async function packages(path: string): Promise<string[]> {
   return Promise.all(stdout.split("\n").map(e => resolve(path, e)))
 }
 
-export async function commits(path: string, ref: string): Promise<GitCommit[]> {
-  // https://git-scm.com/docs/pretty-formats
-  const format: Record<keyof GitCommit, string> = {
-    hash: "%H",
-    treeHash: "%T",
-    parentHashs: "%P",
-    authorName: "%an",
-    authorEmail: "%ae",
-    authorDate: "%aI",
-    authorRelativeDate: "%ar",
-    committerName: "%cn",
-    committerEmail: "%ce",
-    committerDate: "%cI",
-    committerRelativeDate: "%cr",
-    refNames: "%D",
-    subject: "%s",
-    body: "%b",
-    commitNotes: "%N",
-  }
-  const stdout = await git(path, [
-    "log",
-    "--format=" + JSON.stringify(format) + "%x00",
-    ref,
-  ])
-  return Promise.all(
-    stdout
-      .split("\0")
-      .map(normalize)
-      .filter(nonEmptyString)
-      .map<typeof format | null>(tryParse)
-      .filter(nonNull)
-  )
-}
-
 export async function branches(
   path: string,
   option: { logs?: boolean } = {}
@@ -101,16 +67,52 @@ export async function branches(
   }
   const stdout = await git(path, [
     "for-each-ref",
-    "--format=" + JSON.stringify(format) + "%00",
+    "--format=" + JSON.stringify(format).replace(/"/g, "%00") + "%00\n%00",
   ])
   return Promise.all(
     stdout
-      .split("\0")
+      .split("\0\n\0")
+      .map(e => e.replace(/"/g, "&quot;").replace(/\0/g, '"'))
       .map(normalize)
       .filter(nonEmptyString)
       .map<typeof format | null>(tryParse)
       .filter(nonNull)
       .map(toBranch)
+  )
+}
+
+export async function commits(path: string, ref: string): Promise<GitCommit[]> {
+  // https://git-scm.com/docs/pretty-formats
+  const format: Record<keyof GitCommit, string> = {
+    hash: "%H",
+    treeHash: "%T",
+    parentHashs: "%P",
+    authorName: "%an",
+    authorEmail: "%ae",
+    authorDate: "%aI",
+    authorRelativeDate: "%ar",
+    committerName: "%cn",
+    committerEmail: "%ce",
+    committerDate: "%cI",
+    committerRelativeDate: "%cr",
+    refNames: "%D",
+    subject: "%s",
+    body: "%b",
+    commitNotes: "%N",
+  }
+  const stdout = await git(path, [
+    "log",
+    "--format=" + JSON.stringify(format).replace(/"/g, "%x00") + "%x00\n%x00",
+    ref,
+  ])
+  return Promise.all(
+    stdout
+      .split("\0\n\0")
+      .map(e => e.replace(/"/g, "&quot;").replace(/\0/g, '"'))
+      .map(normalize)
+      .filter(nonEmptyString)
+      .map<typeof format | null>(tryParse)
+      .filter(nonNull)
   )
 }
 
