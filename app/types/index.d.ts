@@ -12,12 +12,14 @@ interface GitRepo {
   name: string
   path?: string
   packages?: Package[]
-  remotes?: {
-    origin: GitRemote | null
-    [name: string]: GitRemote
-  }
+  remotes?: GitRemotes
   branches?: GitBranch[]
   commits?: GitCommit[]
+}
+
+interface GitRemotes {
+  origin: GitRemote | null
+  [name: string]: GitRemote
 }
 
 interface GitRemote {

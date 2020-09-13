@@ -26,9 +26,17 @@ export async function packages(path: string): Promise<string[]> {
   return Promise.all(stdout.split("\n").map(e => resolve(path, e)))
 }
 
+export async function remotes(path: string): Promise<GitRemotes> {
+  return {
+    origin: {
+      url: await git(path, ["remote", "get-url", "origin"]),
+    },
+  }
+}
+
 export async function branches(
   path: string,
-  option: { logs?: boolean } = {}
+  option: { commits?: boolean } = {}
 ): Promise<GitBranch[]> {
   // https://git-scm.com/docs/git-for-each-ref
   const format: Record<keyof GitRefInfo, string> = {
@@ -60,7 +68,7 @@ export async function branches(
       authordate: new Date(),
       isHead: isHead === "*",
       ...(await revListLeftRight(path, `origin/HEAD...${rest.refname}`)),
-      commits: option?.logs
+      commits: option?.commits
         ? await commits(path, `origin/HEAD..${rest.refname}`)
         : undefined,
     }

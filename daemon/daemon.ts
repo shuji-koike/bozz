@@ -1,8 +1,9 @@
 import http from "http"
 import express from "express"
 import { createProxyServer } from "http-proxy"
-import { initState, getState } from "./state"
+import { initState } from "./state"
 import { run, runTarget } from "./proc"
+import * as bozz from "./bozz"
 
 let booted = false
 
@@ -22,10 +23,7 @@ export function start({ port, host }: Config, target: string) {
   const app = express()
   app.use(express.json())
   app.set("json spaces", 2)
-  app.use("/.bozz", async (req, res) => {
-    console.debug("bozz", req.url, req.body)
-    res.send(await getState())
-  })
+  app.use(bozz.router)
   app.use((req, res) => {
     console.debug("proxy:", target, req.url)
     proxy.web(req, res, { target }, error => {

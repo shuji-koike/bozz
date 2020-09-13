@@ -1,15 +1,15 @@
 import { resolve } from "path"
 import execa from "execa"
 import fs from "fs-extra-promise"
-import { branches, commits, git, packages } from "./git"
+import { remotes, branches, commits, packages } from "./git"
 
 const state: State = {}
 let statePromise: Promise<State> | null = null
 
 export async function getState(rootDir?: string) {
   if (statePromise) return statePromise
-  statePromise = new Promise(resolve => {
-    initState(rootDir ?? state.rootDir)
+  statePromise = new Promise(async resolve => {
+    await initState(rootDir ?? state.rootDir)
     resolve(state)
     statePromise = null
   })
@@ -28,20 +28,21 @@ export async function initState(rootDir: string = "") {
   })
 }
 
-export async function repo(path: string): Promise<GitRepo> {
+export async function repo(
+  path: string,
+  options: { commits?: boolean } = {}
+): Promise<GitRepo> {
   const [owner, name] = path.split("/").slice(-2)
   return {
     owner,
     name,
     path,
     packages: await Promise.all((await packages(path)).map(npm)),
-    remotes: {
-      origin: {
-        url: await git(path, ["remote", "get-url", "origin"]),
-      },
-    },
+    remotes: await remotes(path),
     branches: await branches(path),
-    commits: await commits(path, "origin/HEAD..HEAD"),
+    commits: options.commits
+      ? await commits(path, "origin/HEAD..HEAD")
+      : undefined,
   }
 }
 
