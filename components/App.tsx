@@ -21,7 +21,7 @@ export default function App() {
   )
 }
 
-function AppProvider({ children }: React.Props<{}>) {
+const AppProvider: React.FC = ({ children }) => {
   return (
     <Provider store={store}>
       <GithubProvider fallback={<Auth />}>

@@ -1,7 +1,8 @@
 import { gql, useQuery } from "@apollo/client"
 import { TabNav } from "@primer/components"
-import React, { useState } from "react"
+import React, { memo, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import { RefFragment } from "~/types/RefFragment"
 import { nodes } from "../src/util"
 import { QueryRepository } from "../types/QueryRepository"
 import { GithubRef, GithubRefFragment } from "./GithubRef"
@@ -17,19 +18,24 @@ export default function RepositoryPage() {
   })
   return (
     <QuerySuspense loading={loading} error={error}>
-      <section>{data && <Repository frag={data.repository} />}</section>
+      <section>
+        <Repository frag={data?.repository} />
+      </section>
     </QuerySuspense>
   )
 }
 
 const Repository: React.FC<{
-  frag: QueryRepository["repository"] | null | undefined
+  frag?: QueryRepository["repository"]
 }> = ({ frag }) => {
-  const [tab, setTab] = useState(3)
+  const [tab, setTab] = useState(0)
+  const [branch, setBranch] = useState<RefFragment | undefined>()
+  useEffect(() => branch && setTab(3), [branch])
+  if (!frag) return <></>
   return (
     <>
       <HeaderSlot deps={[frag]}>
-        {frag?.owner.login}/{frag?.name}
+        {frag.owner.login}/{frag.name}
       </HeaderSlot>
       <TabNav aria-label="Main">
         {["Branches", "Issues", "Labels", "History"].map((e, i) => (
@@ -38,35 +44,37 @@ const Repository: React.FC<{
           </TabNav.Link>
         ))}
       </TabNav>
-      {
-        [
-          <BranchesTab frag={frag} />,
-          <></>,
-          <LabelsTab frag={frag} />,
-          <GitLog sshUrl={frag?.sshUrl} />,
-        ][tab]
-      }
+      {[
+        () => <BranchesTab frag={frag} onSelectItem={setBranch} />,
+        () => <></>,
+        () => <LabelsTab frag={frag} />,
+        () => <GitLog repo={frag} branch={branch} />,
+      ][tab]()}
     </>
   )
 }
 
 const BranchesTab: React.FC<{
   frag: QueryRepository["repository"] | null | undefined
-}> = ({ frag }) => {
+  onSelectItem?: (frag: RefFragment) => void
+}> = memo(({ frag, onSelectItem }) => {
   return (
     <section>
       {nodes(frag?.refs).map(e => (
         <p key={e.name}>
-          <GithubRef key={e.name} frag={e}></GithubRef>
+          <GithubRef
+            key={e.name}
+            frag={e}
+            onSelectItem={onSelectItem}></GithubRef>
         </p>
       ))}
     </section>
   )
-}
+})
 
 const LabelsTab: React.FC<{
   frag: QueryRepository["repository"] | null | undefined
-}> = ({ frag }) => {
+}> = memo(({ frag }) => {
   return (
     <section>
       {nodes(frag?.labels).map(e => (
@@ -76,7 +84,7 @@ const LabelsTab: React.FC<{
       ))}
     </section>
   )
-}
+})
 
 const query = gql`
   query QueryRepository($owner: String!, $name: String!) {

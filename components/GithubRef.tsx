@@ -8,11 +8,15 @@ import { GithubLabelFragment, GithubLabel } from "./Labels"
 export const GithubRef: React.FC<
   BranchNameProps & {
     frag: RefFragment
+    onSelectItem?: (frag: RefFragment) => void
   }
-> = ({ frag, ...props }) => {
+> = ({ frag, onSelectItem, ...props }) => {
   return (
     <>
-      <BranchName title={frag.name} {...props}>
+      <BranchName
+        {...props}
+        title={frag.name}
+        onClick={() => onSelectItem?.(frag)}>
         {frag.name}
       </BranchName>
       <CounterLabel>
@@ -36,6 +40,7 @@ export const GithubRef: React.FC<
 export const GithubRefFragment = gql`
   fragment RefFragment on Ref {
     name
+    prefix
     target {
       oid
       commitUrl
@@ -45,6 +50,14 @@ export const GithubRefFragment = gql`
         number
         title
         url
+        baseRef {
+          name
+          prefix
+          target {
+            oid
+            commitUrl
+          }
+        }
         labels(first: 10) {
           nodes {
             ...LabelFragment

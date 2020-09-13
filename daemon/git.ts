@@ -124,6 +124,10 @@ export async function commits(path: string, ref: string): Promise<GitCommit[]> {
   )
 }
 
+export async function diffs(path: string, ref: string): Promise<string> {
+  return git(path, ["diff", ref])
+}
+
 export async function revListLeftRight(
   path: string,
   ref: string

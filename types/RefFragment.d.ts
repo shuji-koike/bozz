@@ -19,6 +19,34 @@ export interface RefFragment_target {
   readonly commitUrl: any;
 }
 
+export interface RefFragment_associatedPullRequests_nodes_baseRef_target {
+  readonly __typename: "Blob" | "Commit" | "Tag" | "Tree";
+  /**
+   * The Git object ID
+   */
+  readonly oid: any;
+  /**
+   * The HTTP URL for this Git object
+   */
+  readonly commitUrl: any;
+}
+
+export interface RefFragment_associatedPullRequests_nodes_baseRef {
+  readonly __typename: "Ref";
+  /**
+   * The ref name.
+   */
+  readonly name: string;
+  /**
+   * The ref's prefix, such as `refs/heads/` or `refs/tags/`.
+   */
+  readonly prefix: string;
+  /**
+   * The object the ref points to. Returns null when object does not exist.
+   */
+  readonly target: RefFragment_associatedPullRequests_nodes_baseRef_target | null;
+}
+
 export interface RefFragment_associatedPullRequests_nodes_labels_nodes_issues {
   readonly __typename: "IssueConnection";
   /**
@@ -70,6 +98,10 @@ export interface RefFragment_associatedPullRequests_nodes {
    */
   readonly url: any;
   /**
+   * Identifies the base Ref associated with the pull request.
+   */
+  readonly baseRef: RefFragment_associatedPullRequests_nodes_baseRef | null;
+  /**
    * A list of labels associated with the object.
    */
   readonly labels: RefFragment_associatedPullRequests_nodes_labels | null;
@@ -89,6 +121,10 @@ export interface RefFragment {
    * The ref name.
    */
   readonly name: string;
+  /**
+   * The ref's prefix, such as `refs/heads/` or `refs/tags/`.
+   */
+  readonly prefix: string;
   /**
    * The object the ref points to. Returns null when object does not exist.
    */
