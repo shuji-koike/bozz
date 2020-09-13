@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client"
 import { TabNav } from "@primer/components"
-import React, { memo, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { RefFragment } from "~/types/RefFragment"
 import { nodes } from "../src/util"
@@ -28,7 +28,7 @@ export default function RepositoryPage() {
 const Repository: React.FC<{
   frag?: QueryRepository["repository"]
 }> = ({ frag }) => {
-  const [tab, setTab] = useState(0)
+  const [tab, setTab] = useState(3)
   const [branch, setBranch] = useState<RefFragment | undefined>()
   useEffect(() => branch && setTab(3), [branch])
   if (!frag) return <></>
@@ -57,7 +57,7 @@ const Repository: React.FC<{
 const BranchesTab: React.FC<{
   frag: QueryRepository["repository"] | null | undefined
   onSelectItem?: (frag: RefFragment) => void
-}> = memo(({ frag, onSelectItem }) => {
+}> = ({ frag, onSelectItem }) => {
   return (
     <section>
       {nodes(frag?.refs).map(e => (
@@ -70,11 +70,11 @@ const BranchesTab: React.FC<{
       ))}
     </section>
   )
-})
+}
 
 const LabelsTab: React.FC<{
   frag: QueryRepository["repository"] | null | undefined
-}> = memo(({ frag }) => {
+}> = ({ frag }) => {
   return (
     <section>
       {nodes(frag?.labels).map(e => (
@@ -84,7 +84,7 @@ const LabelsTab: React.FC<{
       ))}
     </section>
   )
-})
+}
 
 const query = gql`
   query QueryRepository($owner: String!, $name: String!) {

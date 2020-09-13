@@ -19,7 +19,7 @@ router.post(
 
 router.post(
   "/.bozz/diffs",
-  async (req: Request<{}, string, BozzCommits>, res) => {
+  async (req: Request<{}, GitDiff, BozzCommits>, res) => {
     console.debug("bozz:", req.url, req.body)
     res.send(await diffs(req.body.path, req.body.ref))
   }

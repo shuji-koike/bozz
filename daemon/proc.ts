@@ -1,5 +1,5 @@
-import { openSync } from "fs"
 import { spawn, ChildProcess, SpawnOptionsWithoutStdio } from "child_process"
+import { openSync } from "fs"
 
 const procMap: Record<string, ChildProcess | undefined> = {}
 

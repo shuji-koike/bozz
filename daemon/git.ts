@@ -1,5 +1,6 @@
 import { resolve } from "path"
 import execa from "execa"
+import parseDiff from "parse-diff"
 import { nonNull, nonEmptyString, tryParse, normalize } from "../src/util"
 
 export async function git<A>(path: string, args: string[]) {
@@ -124,8 +125,8 @@ export async function commits(path: string, ref: string): Promise<GitCommit[]> {
   )
 }
 
-export async function diffs(path: string, ref: string): Promise<string> {
-  return git(path, ["diff", ref])
+export async function diffs(path: string, ref: string): Promise<GitDiff> {
+  return parseDiff(await git(path, ["diff", ref]))
 }
 
 export async function revListLeftRight(
