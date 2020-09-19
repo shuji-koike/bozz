@@ -1,5 +1,4 @@
 /// <reference types="firebase/app" />
-/// <reference types="parse-diff" />
 
 type Await<T> = T extends {
   then(onfulfilled?: (value: infer U) => unknown): unknown
@@ -77,8 +76,6 @@ interface GitCommitInfo {
   body: string
   commitNotes: string
 }
-
-type GitDiff = parseDiff.File[]
 
 interface Package {
   path: string

@@ -37,7 +37,7 @@ export async function repo(
     owner,
     name,
     path,
-    packages: await Promise.all((await packages(path)).map(npm)),
+    packages: await Promise.all((await packages(path)).map(readPackage)),
     remotes: await remotes(path),
     branches: await branches(path),
     commits: options.commits
@@ -46,7 +46,7 @@ export async function repo(
   }
 }
 
-export async function npm(path: string): Promise<Package> {
+export async function readPackage(path: string): Promise<Package> {
   const { name, scripts } = JSON.parse(
     (await fs.readFileAsync(path)).toString()
   )

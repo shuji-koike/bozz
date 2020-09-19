@@ -1,4 +1,5 @@
 import Axios from "axios"
+import parseDiff from "parse-diff"
 import React, { useContext, useEffect, useState } from "react"
 import { QueryRepository } from "~/types/QueryRepository"
 import { RefFragment } from "~/types/RefFragment"
@@ -11,7 +12,7 @@ export const GitLog: React.FC<{
   const { repos } = useContext(BozzContext)
   const path = repos?.find(e => e.remotes?.origin?.url === repo?.sshUrl)?.path
   const [commits, setCommits] = useState<GitCommit[]>([])
-  const [diffs, setDiffs] = useState<GitDiff>([])
+  const [diffs, setDiffs] = useState<parseDiff.File[]>([])
   const ref = [
     branch?.associatedPullRequests?.nodes?.[0]?.baseRef?.target?.oid ||
       "origin/HEAD",

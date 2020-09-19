@@ -1,4 +1,5 @@
 import { Request, Router } from "express"
+import parseDiff from "parse-diff"
 import { commits, diffs } from "./git"
 import { getState } from "./state"
 
@@ -19,7 +20,7 @@ router.post(
 
 router.post(
   "/.bozz/diffs",
-  async (req: Request<{}, GitDiff, BozzCommits>, res) => {
+  async (req: Request<{}, parseDiff.File[], BozzCommits>, res) => {
     console.debug("bozz:", req.url, req.body)
     res.send(await diffs(req.body.path, req.body.ref))
   }

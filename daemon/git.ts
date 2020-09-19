@@ -125,7 +125,7 @@ export async function commits(path: string, ref: string): Promise<GitCommit[]> {
   )
 }
 
-export async function diffs(path: string, ref: string): Promise<GitDiff> {
+export async function diffs(path: string, ref: string) {
   return parseDiff(await git(path, ["diff", ref]))
 }
 
