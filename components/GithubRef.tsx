@@ -10,29 +10,22 @@ export const GithubRef: React.FC<
     frag: RefFragment
     onSelectItem?: (frag: RefFragment) => void
   }
-> = ({ frag, onSelectItem, ...props }) => {
+> = ({ frag, onSelectItem }) => {
   return (
     <>
-      <BranchName
-        {...props}
-        title={frag.name}
-        onClick={() => onSelectItem?.(frag)}>
-        {frag.name}
-      </BranchName>
-      <CounterLabel>
-        <a href={frag.target?.commitUrl}>{frag.target?.oid.slice(0, 7)}</a>
-      </CounterLabel>
-      <span>
-        {nodes(frag.associatedPullRequests).map(e => (
-          <span key={e.number}>
-            <a href={e.url}>#{e.number}</a>
-            {e.title}
+      <span onClick={() => onSelectItem?.(frag)}>{frag.name}</span>
+      <a href={frag.target?.commitUrl}>{frag.target?.oid.slice(0, 7)}</a>
+      {nodes(frag.associatedPullRequests).map(e => (
+        <React.Fragment key={e.number}>
+          <a href={e.url}>#{e.number}</a>
+          <span>{e.title}</span>
+          <span>
             {nodes(e.labels).map(e => (
               <GithubLabel key={e.name} frag={e}></GithubLabel>
             ))}
           </span>
-        ))}
-      </span>
+        </React.Fragment>
+      ))}
     </>
   )
 }

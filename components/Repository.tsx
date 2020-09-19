@@ -2,6 +2,7 @@ import { gql, useQuery } from "@apollo/client"
 import { TabNav } from "@primer/components"
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import styled from "styled-components"
 import { RefFragment } from "~/types/RefFragment"
 import { nodes } from "../src/util"
 import { QueryRepository } from "../types/QueryRepository"
@@ -28,7 +29,7 @@ export default function RepositoryPage() {
 const Repository: React.FC<{
   frag?: QueryRepository["repository"]
 }> = ({ frag }) => {
-  const [tab, setTab] = useState(3)
+  const [tab, setTab] = useState(0)
   const [branch, setBranch] = useState<RefFragment | undefined>()
   useEffect(() => branch && setTab(3), [branch])
   if (!frag) return <></>
@@ -59,18 +60,25 @@ const BranchesTab: React.FC<{
   onSelectItem?: (frag: RefFragment) => void
 }> = ({ frag, onSelectItem }) => {
   return (
-    <section>
+    <StyledBranchesTab>
       {nodes(frag?.refs).map(e => (
-        <p key={e.name}>
-          <GithubRef
-            key={e.name}
-            frag={e}
-            onSelectItem={onSelectItem}></GithubRef>
-        </p>
+        <div key={e.name}>
+          <GithubRef frag={e} onSelectItem={onSelectItem}></GithubRef>
+        </div>
       ))}
-    </section>
+    </StyledBranchesTab>
   )
 }
+
+const StyledBranchesTab = styled.section`
+  display: table;
+  > * {
+    display: table-row;
+  }
+  > * > * {
+    display: table-cell;
+  }
+`
 
 const LabelsTab: React.FC<{
   frag: QueryRepository["repository"] | null | undefined

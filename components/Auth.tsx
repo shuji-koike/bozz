@@ -9,7 +9,7 @@ import { Input } from "./Input"
 
 export const Auth: React.FC = () => {
   const user = useContext(UserContext)
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
   if (user === undefined) {
     return <>Loadging...</>
   }
