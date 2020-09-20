@@ -12,29 +12,34 @@ import { fragments, Pile } from "./Pile"
 import { QuerySuspense } from "./QuerySuspense"
 
 export default function RepositoryPilePage() {
-  const params = useParams<{ owner: string; name: string }>()
-  return <RepositoryPile {...params} />
-}
-
-export function RepositoryPile({ ...variables }: QueryRepositoryPileVariables) {
   const { data, loading, error } = useQuery<
     QueryRepositoryPile,
     QueryRepositoryPileVariables
-  >(query, { variables })
+  >(query, {
+    variables: useParams<{ owner: string; name: string }>(),
+  })
   return (
     <QuerySuspense loading={loading} error={error}>
-      <section>
-        {nodes(data?.repository?.collaborators).map(e => (
-          <React.Fragment key={e.id}>
-            <p>
-              <GithubItem frag={e} />
-            </p>
-            <Pile data={e} variables={{}}></Pile>
-          </React.Fragment>
-        ))}
-        <PagerMore frag={data?.repository?.collaborators} />
-      </section>
+      <RepositoryPile frag={data} />
     </QuerySuspense>
+  )
+}
+
+export const RepositoryPile: React.FC<{ frag?: QueryRepositoryPile }> = ({
+  frag,
+}) => {
+  return (
+    <section>
+      {nodes(frag?.repository?.collaborators).map(e => (
+        <React.Fragment key={e.id}>
+          <p>
+            <GithubItem frag={e} />
+          </p>
+          <Pile data={e}></Pile>
+        </React.Fragment>
+      ))}
+      <PagerMore frag={frag?.repository?.collaborators} />
+    </section>
   )
 }
 

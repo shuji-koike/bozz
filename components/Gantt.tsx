@@ -5,7 +5,10 @@ import { useParams } from "react-router-dom"
 import styled from "styled-components"
 import { nonNull } from "../src/util"
 import { GithubMilestoneFragment } from "../types/GithubMilestoneFragment"
-import { QueryMilestones } from "../types/QueryMilestones"
+import {
+  QueryMilestones,
+  QueryMilestonesVariables,
+} from "../types/QueryMilestones"
 import { GanttHeader } from "./GanttHeader"
 import { GithubItem } from "./GithubItem"
 import { GithubItemFragment } from "./GithubItem"
@@ -13,9 +16,11 @@ import { QuerySuspense } from "./QuerySuspense"
 import { ScrollBox } from "./ScrollBox"
 
 export default function GanttPage() {
-  const params = useParams<{ owner: string; name: string }>()
-  const { data, loading, error } = useQuery<QueryMilestones>(query, {
-    variables: params,
+  const { data, loading, error } = useQuery<
+    QueryMilestones,
+    QueryMilestonesVariables
+  >(query, {
+    variables: useParams<{ owner: string; name: string }>(),
   })
   return (
     <QuerySuspense loading={loading} error={error}>

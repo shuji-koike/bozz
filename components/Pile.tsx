@@ -13,14 +13,14 @@ import { PagerMore, PagerUtil } from "./Pager"
 
 interface PileProps {
   data: UserPileFragment
-  variables: Partial<
+  variables?: Partial<
     QueryOrganizationPileVariables & QueryRepositoryPileVariables
   >
 }
 
 export const Pile: React.FC<PileProps> = ({
   data,
-  variables: { login, owner, name },
+  variables: { login, owner, name } = {},
 }) => {
   function getRepoLabel(repo?: GithubItemFragmentRepository) {
     if (!repo) return ""

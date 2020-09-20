@@ -5,7 +5,10 @@ import { useParams } from "react-router-dom"
 import styled from "styled-components"
 import { RefFragment } from "~/types/RefFragment"
 import { nodes } from "../src/util"
-import { QueryRepository } from "../types/QueryRepository"
+import {
+  QueryRepository,
+  QueryRepositoryVariables,
+} from "../types/QueryRepository"
 import { GithubRef, GithubRefFragment } from "./GithubRef"
 import { GitLog } from "./GitLog"
 import { GithubLabel, GithubLabelFragment } from "./Labels"
@@ -13,15 +16,15 @@ import { HeaderSlot } from "./Layout"
 import { QuerySuspense } from "./QuerySuspense"
 
 export default function RepositoryPage() {
-  const { owner, name } = useParams<{ owner: string; name: string }>()
-  const { data, loading, error } = useQuery<QueryRepository>(query, {
-    variables: { owner, name },
+  const { data, loading, error } = useQuery<
+    QueryRepository,
+    QueryRepositoryVariables
+  >(query, {
+    variables: useParams(),
   })
   return (
     <QuerySuspense loading={loading} error={error}>
-      <section>
-        <Repository frag={data?.repository} />
-      </section>
+      <Repository frag={data?.repository} />
     </QuerySuspense>
   )
 }
@@ -34,7 +37,7 @@ const Repository: React.FC<{
   useEffect(() => branch && setTab(3), [branch])
   if (!frag) return <></>
   return (
-    <>
+    <section>
       <HeaderSlot deps={[frag]}>
         {frag.owner.login}/{frag.name}
       </HeaderSlot>
@@ -51,7 +54,7 @@ const Repository: React.FC<{
         () => <LabelsTab frag={frag} />,
         () => <GitLog repo={frag} branch={branch} />,
       ][tab]()}
-    </>
+    </section>
   )
 }
 
