@@ -5,12 +5,8 @@ import * as bozz from "./bozz"
 import { run, runTarget } from "./proc"
 import { initState } from "./state"
 
-let booted = false
-
 export async function boot(config: Config) {
   console.info("daemon:", "boot")
-  if (booted) return
-  booted = true
   await Promise.all([
     initState(config.rootDir),
     start(config, "http://localhost:3000/"),
