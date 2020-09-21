@@ -1,16 +1,13 @@
 import { gql } from "@apollo/client"
-import { BranchName, BranchNameProps, CounterLabel } from "@primer/components"
 import React from "react"
 import { nodes } from "~/src/util"
 import { RefFragment } from "../types/RefFragment"
 import { GithubLabelFragment, GithubLabel } from "./Labels"
 
-export const GithubRef: React.FC<
-  BranchNameProps & {
-    frag: RefFragment
-    onSelectItem?: (frag: RefFragment) => void
-  }
-> = ({ frag, onSelectItem }) => {
+export const GithubRef: React.FC<{
+  frag: RefFragment
+  onSelectItem?: (frag: RefFragment) => void
+}> = ({ frag, onSelectItem }) => {
   return (
     <>
       <span onClick={() => onSelectItem?.(frag)}>{frag.name}</span>
