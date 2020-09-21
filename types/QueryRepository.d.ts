@@ -3,6 +3,8 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { MergeableState } from "./globalTypes";
+
 // ====================================================
 // GraphQL query operation: QueryRepository
 // ====================================================
@@ -127,6 +129,62 @@ export interface QueryRepository_repository_refs_nodes_associatedPullRequests_no
   readonly nodes: ReadonlyArray<(QueryRepository_repository_refs_nodes_associatedPullRequests_nodes_labels_nodes | null)> | null;
 }
 
+export interface QueryRepository_repository_refs_nodes_associatedPullRequests_nodes_comments {
+  readonly __typename: "IssueCommentConnection";
+  /**
+   * Identifies the total count of items in the connection.
+   */
+  readonly totalCount: number;
+}
+
+export interface QueryRepository_repository_refs_nodes_associatedPullRequests_nodes_reviews_nodes_author {
+  readonly __typename: "Bot" | "EnterpriseUserAccount" | "Mannequin" | "Organization" | "User";
+  /**
+   * A URL pointing to the actor's public avatar.
+   */
+  readonly avatarUrl: any;
+  /**
+   * The username of the actor.
+   */
+  readonly login: string;
+  /**
+   * The HTTP URL for this actor.
+   */
+  readonly url: any;
+}
+
+export interface QueryRepository_repository_refs_nodes_associatedPullRequests_nodes_reviews_nodes_comments {
+  readonly __typename: "PullRequestReviewCommentConnection";
+  /**
+   * Identifies the total count of items in the connection.
+   */
+  readonly totalCount: number;
+}
+
+export interface QueryRepository_repository_refs_nodes_associatedPullRequests_nodes_reviews_nodes {
+  readonly __typename: "PullRequestReview";
+  /**
+   * The actor who authored the comment.
+   */
+  readonly author: QueryRepository_repository_refs_nodes_associatedPullRequests_nodes_reviews_nodes_author | null;
+  /**
+   * A list of review comments for the current pull request review.
+   */
+  readonly comments: QueryRepository_repository_refs_nodes_associatedPullRequests_nodes_reviews_nodes_comments;
+}
+
+export interface QueryRepository_repository_refs_nodes_associatedPullRequests_nodes_reviews {
+  readonly __typename: "PullRequestReviewConnection";
+  /**
+   * Identifies the total count of items in the connection.
+   */
+  readonly totalCount: number;
+  /**
+   * A list of nodes.
+   */
+  readonly nodes: ReadonlyArray<(QueryRepository_repository_refs_nodes_associatedPullRequests_nodes_reviews_nodes | null)> | null;
+}
+
 export interface QueryRepository_repository_refs_nodes_associatedPullRequests_nodes {
   readonly __typename: "PullRequest";
   /**
@@ -142,6 +200,14 @@ export interface QueryRepository_repository_refs_nodes_associatedPullRequests_no
    */
   readonly url: any;
   /**
+   * Identifies if the pull request is a draft.
+   */
+  readonly isDraft: boolean;
+  /**
+   * Whether or not the pull request can be merged based on the existence of merge conflicts.
+   */
+  readonly mergeable: MergeableState;
+  /**
    * Identifies the base Ref associated with the pull request.
    */
   readonly baseRef: QueryRepository_repository_refs_nodes_associatedPullRequests_nodes_baseRef | null;
@@ -149,6 +215,14 @@ export interface QueryRepository_repository_refs_nodes_associatedPullRequests_no
    * A list of labels associated with the object.
    */
   readonly labels: QueryRepository_repository_refs_nodes_associatedPullRequests_nodes_labels | null;
+  /**
+   * A list of comments associated with the pull request.
+   */
+  readonly comments: QueryRepository_repository_refs_nodes_associatedPullRequests_nodes_comments;
+  /**
+   * A list of reviews associated with the pull request.
+   */
+  readonly reviews: QueryRepository_repository_refs_nodes_associatedPullRequests_nodes_reviews | null;
 }
 
 export interface QueryRepository_repository_refs_nodes_associatedPullRequests {

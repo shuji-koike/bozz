@@ -22,7 +22,7 @@ export const GithubIcon: React.FC<{
 }> = ({ frag }) =>
   frag && <StyledGithubIcon as={icon(frag)} style={{ color: color(frag) }} />
 
-const StyledGithubIcon = styled.svg<{ style?: CSSProperties }>`
+export const StyledGithubIcon = styled.svg<{ style?: CSSProperties }>`
   color: ${props => props.style?.color};
   & + * {
     margin-left: 0.25rem;

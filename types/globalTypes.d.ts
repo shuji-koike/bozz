@@ -8,6 +8,15 @@
 //==============================================================
 
 /**
+ * Whether or not a PullRequest can be merged.
+ */
+export enum MergeableState {
+  CONFLICTING = "CONFLICTING",
+  MERGEABLE = "MERGEABLE",
+  UNKNOWN = "UNKNOWN",
+}
+
+/**
  * Possible directions in which to order a list of items when provided an `orderBy` argument.
  */
 export enum OrderDirection {
