@@ -10,7 +10,7 @@ export const GitLog: React.FC<{
   branch?: RefFragment
 }> = ({ repo, branch }) => {
   const { repos } = useContext(BozzContext)
-  const path = repos?.find(e => e.origin?.url === repo?.sshUrl)?.path
+  const path = repos?.find(e => e.remotes?.origin?.url === repo?.sshUrl)?.path
   const [commits, setCommits] = useState<GitCommit[]>([])
   const [diffs, setDiffs] = useState<parseDiff.File[]>([])
   const ref = [

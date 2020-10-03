@@ -22,13 +22,12 @@ interface RepoBase {
 }
 
 interface GitRepo {
-  origin: GitRemote | null
   remotes?: GitRemotes
   branches?: GitBranch[]
   commits?: GitCommit[]
 }
 
-type GitRemotes = Record<string, GitRemote>
+type GitRemotes = Record<"origin" | string, GitRemote>
 
 interface GitRemote {
   url?: string

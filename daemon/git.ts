@@ -23,10 +23,8 @@ export async function repo(
   options: { commits?: boolean } = {}
 ): Promise<GitRepo> {
   const remotes = await gitRemotes(path)
-  const origin = remotes["origin"] || null
-  const base = origin ? "origin/HEAD" : "master"
+  const base = "origin" in remotes ? "origin/HEAD" : "master"
   return {
-    origin,
     remotes,
     branches: await branches(path, { base }),
     commits: options.commits ? await commits(path, `${base}..HEAD`) : undefined,
