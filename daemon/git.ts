@@ -18,6 +18,19 @@ export async function git<A>(path: string, args: string[]) {
   }
 }
 
+export async function repo(
+  path: string,
+  options: { commits?: boolean } = {}
+): Promise<GitRepo> {
+  return {
+    remotes: await remotes(path),
+    branches: await branches(path),
+    commits: options.commits
+      ? await commits(path, "origin/HEAD..HEAD")
+      : undefined,
+  }
+}
+
 export async function packages(path: string): Promise<string[]> {
   const stdout = await git(path, [
     "ls-files",

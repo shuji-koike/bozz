@@ -2,7 +2,7 @@ import { resolve } from "path"
 import execa from "execa"
 import fs from "fs-extra-promise"
 import { brewServiceList } from "./brew"
-import { remotes, branches, commits, packages } from "./git"
+import { repo, packages } from "./git"
 
 const state: State = {}
 let statePromise: Promise<State> | null = null
@@ -25,28 +25,22 @@ export async function initState(rootDir: string = "") {
   setState({
     timestamp: new Date().getTime(),
     rootDir,
-    repos: await exec(resolve("../scripts/git-list-repo.sh"), [rootDir], repo),
+    repos: await exec(
+      resolve("../scripts/git-list-repo.sh"),
+      [rootDir],
+      loadRepo
+    ),
     brew: {
       services: await brewServiceList(),
     },
   })
 }
 
-export async function repo(
-  path: string,
-  options: { commits?: boolean } = {}
-): Promise<GitRepo> {
-  const [owner, name] = path.split("/").slice(-2)
+export async function loadRepo(path: string): Promise<Repo> {
   return {
-    owner,
-    name,
     path,
     packages: await Promise.all((await packages(path)).map(readPackage)),
-    remotes: await remotes(path),
-    branches: await branches(path),
-    commits: options.commits
-      ? await commits(path, "origin/HEAD..HEAD")
-      : undefined,
+    ...(await repo(path)),
   }
 }
 

@@ -10,15 +10,18 @@ interface State {
   timestamp?: number
   count?: number
   rootDir?: string
-  repos?: GitRepo[]
+  repos?: Repo[]
   brew?: BrewState
 }
 
-interface GitRepo {
-  owner: string
-  name: string
+type Repo = RepoBase & GitRepo
+
+interface RepoBase {
   path?: string
   packages?: Package[]
+}
+
+interface GitRepo {
   remotes?: GitRemotes
   branches?: GitBranch[]
   commits?: GitCommit[]

@@ -5,6 +5,5 @@
   },
   "ts-node": {
     "files": true
-  },
-  "files": ["../app/types/index.d.ts"]
+  }
 }

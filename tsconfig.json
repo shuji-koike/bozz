@@ -1,5 +1,4 @@
 {
-  "extends": "./tsconfig.paths.json",
   "compilerOptions": {
     "strict": true,
     "target": "es6",
@@ -19,23 +18,10 @@
     "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
     "jsx": "preserve",
-    "typeRoots": [
-      "./app/types"
-    ]
   },
   "include": [
-    "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx",
-    "config-overrides.js"
+    "**/*.tsx"
   ],
-  "exclude": [
-    "node_modules"
-  ],
-  "ts-node": {
-    "files": true
-  },
-  "files": [
-    "app/types/index.d.ts"
-  ]
+  "extends": "./tsconfig.paths.json"
 }

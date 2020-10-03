@@ -24,23 +24,20 @@ export const Bozz: React.FC = () => {
   )
 }
 
-export const BozzRepo: React.FC<GitRepo> = ({
-  packages,
-  branches,
-  ...repo
-}) => {
+export const BozzRepo: React.FC<Repo> = ({ packages, branches, ...repo }) => {
   const [open, setOpen] = useState(true)
+  const [owner, name] = repo.path?.split("/").slice(-2)!
   return (
     <StyledDetails
       open={open}
       onToggle={() => setOpen(open)}
       label={
         <Breadcrumb>
-          <Breadcrumb.Item as={NavLink} to={`/${repo.owner}`}>
-            {repo.owner}
+          <Breadcrumb.Item as={NavLink} to={`/${owner}`}>
+            {owner}
           </Breadcrumb.Item>
-          <Breadcrumb.Item as={NavLink} to={`/${repo.owner}/${repo.name}`}>
-            {repo.name}
+          <Breadcrumb.Item as={NavLink} to={`/${owner}/${name}`}>
+            {name}
           </Breadcrumb.Item>
         </Breadcrumb>
       }>
@@ -106,7 +103,7 @@ const StyledBranchName = styled(BranchName)`
   }
 `
 
-export const BozzPackages: React.FC<Pick<GitRepo, "packages">> = ({
+export const BozzPackages: React.FC<Pick<Repo, "packages">> = ({
   packages,
 }) => {
   return (
