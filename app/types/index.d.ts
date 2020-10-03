@@ -11,6 +11,7 @@ interface State {
   count?: number
   rootDir?: string
   repos?: GitRepo[]
+  brew?: BrewState
 }
 
 interface GitRepo {
@@ -83,6 +84,13 @@ interface Package {
     name?: string
   }
   scripts?: Record<string, string>
+}
+
+interface BrewState {
+  services?: {
+    name: string
+    status: string
+  }[]
 }
 
 interface Config {

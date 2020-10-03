@@ -1,6 +1,7 @@
 import { resolve } from "path"
 import execa from "execa"
 import fs from "fs-extra-promise"
+import { brewServiceList } from "./brew"
 import { remotes, branches, commits, packages } from "./git"
 
 const state: State = {}
@@ -25,6 +26,9 @@ export async function initState(rootDir: string = "") {
     timestamp: new Date().getTime(),
     rootDir,
     repos: await exec(resolve("../scripts/git-list-repo.sh"), [rootDir], repo),
+    brew: {
+      services: await brewServiceList(),
+    },
   })
 }
 

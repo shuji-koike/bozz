@@ -1,5 +1,13 @@
 import execa from "execa"
-type BrewCommand = "update" | "upgrade" | "list" | "leaves" | "search" | "info"
+
+type BrewCommand =
+  | "update"
+  | "upgrade"
+  | "list"
+  | "leaves"
+  | "search"
+  | "info"
+  | "services"
 
 export async function brew(command: BrewCommand, ...args: string[]) {
   try {
@@ -17,4 +25,12 @@ export async function brew(command: BrewCommand, ...args: string[]) {
 export async function brewUpgrade() {
   await brew("update")
   await brew("upgrade")
+}
+
+export async function brewServiceList(): Promise<BrewState["services"]> {
+  return (await brew("services", "list"))
+    .split("\n")
+    .slice(1)
+    .map(e => e.split(/\s+/))
+    .map(([name, status]) => ({ name, status }))
 }
