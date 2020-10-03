@@ -3,5 +3,16 @@
   "version": "0.1.0",
   "scripts": {
     "start": "ts-node-dev --respawn ."
+  },
+  "dependencies": {
+    "@types/express": "^4.17.8",
+    "@types/fs-extra-promise": "^1.0.9",
+    "@types/http-proxy": "^1.17.4",
+    "execa": "^4.0.3",
+    "express": "^4.17.1",
+    "fs-extra-promise": "^1.0.1",
+    "node-http-proxy": "^0.2.3",
+    "parse-diff": "^0.7.1",
+    "ts-node-dev": "^1.0.0-pre.63"
   }
 }
