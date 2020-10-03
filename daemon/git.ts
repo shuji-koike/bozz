@@ -22,12 +22,14 @@ export async function repo(
   path: string,
   options: { commits?: boolean } = {}
 ): Promise<GitRepo> {
+  const remotes = await gitRemotes(path)
+  const origin = remotes["origin"] || null
+  const base = origin ? "origin/HEAD" : "master"
   return {
-    remotes: await remotes(path),
-    branches: await branches(path),
-    commits: options.commits
-      ? await commits(path, "origin/HEAD..HEAD")
-      : undefined,
+    origin,
+    remotes,
+    branches: await branches(path, { base }),
+    commits: options.commits ? await commits(path, `${base}..HEAD`) : undefined,
   }
 }
 
@@ -37,20 +39,29 @@ export async function packages(path: string): Promise<string[]> {
     "package.json",
     "**/package.json",
   ])
-  return Promise.all(stdout.split("\n").map(e => resolve(path, e)))
+  return Promise.all(split(stdout).map(e => resolve(path, e)))
 }
 
-export async function remotes(path: string): Promise<GitRemotes> {
-  return {
-    origin: {
-      url: await git(path, ["remote", "get-url", "origin"]),
-    },
+export async function gitRemotes(path: string): Promise<GitRemotes> {
+  const dict: GitRemotes = {}
+  for (const name of await git(path, ["remote"]).then(split)) {
+    const value = await remote(path, name)
+    if (value) dict[name] = value
   }
+  return dict
+}
+
+export async function remote(
+  path: string,
+  name: string
+): Promise<GitRemote | null> {
+  const url = await git(path, ["remote", "get-url", name])
+  return url ? { url } : null
 }
 
 export async function branches(
   path: string,
-  option: { commits?: boolean } = {}
+  option: { commits?: boolean; base: string } = { base: "origin/HEAD" }
 ): Promise<GitBranch[]> {
   // https://git-scm.com/docs/git-for-each-ref
   const format: Record<keyof GitRefInfo, string> = {
@@ -81,9 +92,9 @@ export async function branches(
       upstream: upstream || null,
       authordate: new Date(),
       isHead: isHead === "*",
-      ...(await revListLeftRight(path, `origin/HEAD...${rest.refname}`)),
+      ...(await revListLeftRight(path, `${option.base}...${rest.refname}`)),
       commits: option?.commits
-        ? await commits(path, `origin/HEAD..${rest.refname}`)
+        ? await commits(path, `${option.base}..${rest.refname}`)
         : undefined,
     }
   }
@@ -152,4 +163,8 @@ export async function revListLeftRight(
     .split("\t")
     .map(Number)
   return { behind, ahead }
+}
+
+function split(str: string): string[] {
+  return str.split("\n").filter(e => e)
 }
