@@ -4,7 +4,7 @@ const ExtensionReloader = require("webpack-extension-reloader")
 
 module.exports = {
   entry: {
-    main: "./index.mjs",
+    main: "./index.js",
     background: "./background.js",
   },
   mode: process.env.NODE_ENV || "development",
