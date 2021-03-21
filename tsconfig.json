@@ -17,7 +17,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
-    "jsx": "preserve"
+    "jsx": "react",
+    "noFallthroughCasesInSwitch": true
   },
   "include": [
     "**/*.ts",

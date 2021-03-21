@@ -13,6 +13,12 @@ export async function loginWithGithub() {
   const provider = new firebase.auth.GithubAuthProvider()
   provider.addScope("repo")
   provider.addScope("read:org")
+  loginWithAuthProvider(provider)
+}
+
+export async function loginWithAuthProvider(
+  provider: firebase.auth.AuthProvider
+) {
   const { credential } = await firebase.auth().signInWithPopup(provider)
   const obj = credential?.toJSON()
   if (obj && "oauthAccessToken" in obj)
