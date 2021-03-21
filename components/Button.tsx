@@ -2,17 +2,18 @@ import { Button as PrimerButton } from "@primer/components"
 import React from "react"
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  label?: React.ReactNode | null
+  label?: string | null
 }
 
 export const Button: React.FC<ButtonProps> = ({
   type = "button",
   label,
+  children,
   ...props
 }) => {
   return (
-    <PrimerButton {...props} type={type}>
-      {label}
+    <PrimerButton {...props} title={label ?? undefined} type={type}>
+      {children || label}
     </PrimerButton>
   )
 }
