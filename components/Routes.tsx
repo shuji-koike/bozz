@@ -21,9 +21,10 @@ const RouteSuspense: React.FC<
   Omit<RouteProps, "component"> & {
     component: Promise<{ default: React.ComponentType }>
   }
-> = ({ exact = true, component, ...props }) => (
+> = ({ component, exact = true, ...props }) => (
   <Route
     {...props}
+    exact={exact}
     component={useCallback(
       props => (
         <Suspense fallback="Loading...">
