@@ -5,7 +5,7 @@ import { UserContext } from "~/components/App"
 import { loginWithGithub, logout } from "~/src/firebase"
 import { Button } from "./Button"
 import { Form } from "./Form"
-import { Input } from "./Input"
+import { StorageInput } from "./StorageInput"
 
 export const Auth: React.FC = () => {
   const user = useContext(UserContext)
@@ -34,7 +34,7 @@ export const Auth: React.FC = () => {
           <StyledForm>
             <span>{user.displayName}</span>
             <hr />
-            <Input
+            <StorageInput
               type="password"
               name="GITHUB_TOKEN"
               autoComplete="token"

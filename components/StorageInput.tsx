@@ -1,16 +1,16 @@
 import React, { useCallback } from "react"
 import { useStorage } from "../src/hooks"
 
-type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "name"> & {
+export type StorageInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   name: string
   storage?: Storage
 }
 
-export const Input: React.FC<InputProps> = ({
+export const StorageInput: React.FC<StorageInputProps> = ({
   name,
   placeholder = name,
   onChange,
-  storage,
+  storage = window.localStorage,
   ...props
 }) => {
   const { value, setValue } = useStorage(name, storage)
